@@ -5,20 +5,20 @@
 \begin{document}
 
 \begin{tikzpicture}
-  \tikzstyle{tensornode}=[draw,minimum size=1, fill=orange, rounded corners=0.1cm]
-  \tikzstyle{tensorleg}=[thick]
-
   \begin{luacode}
     mpt = require('mptikz')
+    local style = 'draw, fill=orange, rounded corners=0.1cm'
     mpt.defaults['len_vertical_legs'] = 0.25
+    mpt.defaults['tensor_style'] = style
+
+    -- Draw MPA manually
     mpt.draw_node({S=1, W=0, E=1}, {x=0})
     mpt.draw_node({S=1, W=1, E=1}, {x=1.5})
     mpt.draw_node({S=1, W=1, E=0}, {x=3.0})
-  \end{luacode}
 
-  \tikzstyle{tensornode}=[draw,minimum size=1, fill=red, rounded corners=0.1cm]
-  \begin{luacode}
-    mpt.draw_mpa(3, {N=2}, {y=-1.5})
+    -- Draw MPA using appropriate function
+    mpt.defaults['tensor_style'] = style .. ', fill=green'
+    mpt.draw_mpa(3, {N=1}, {y=-1.5})
   \end{luacode}
 \end{tikzpicture}
 

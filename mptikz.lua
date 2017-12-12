@@ -53,7 +53,7 @@ function DefaultTable(init, defaults)
 end
 
 
-function draw_legs(orientation, nr, leglen, width, height, tname)
+function draw_legs(orientation, nr, leglen, width, height, props)
   for i = 1,nr do
     local x1
     local x2
@@ -66,34 +66,34 @@ function draw_legs(orientation, nr, leglen, width, height, tname)
       x2 = x1
       y1 = height/2
       y2 = y1 + leglen
-      name = string.format('%s_N%i', tname, i)
+      name = string.format('%s_N%i', props['tensor_name'], i)
 
     elseif orientation == 'S' then
       x1 = (i / (nr + 1) - 0.5) * width
       x2 = x1
       y1 = -height/2
       y2 = y1 - leglen
-      name = string.format('%s_S%i', tname, i)
+      name = string.format('%s_S%i', props['tensor_name'], i)
 
     elseif orientation == 'W' then
       x1 = -width/2
       x2 = x1 - leglen
       y1 = (i / (nr + 1) - 0.5) * width
       y2 = y1
-      name = string.format('%s_W%i', tname, i)
+      name = string.format('%s_W%i', props['tensor_name'], i)
 
     elseif orientation == 'E' then
       x1 = width/2
       x2 = x1 + leglen
       y1 = (i / (nr + 1) - 0.5) * width
       y2 = y1
-      name = string.format('%s_E%i', tname, i)
+      name = string.format('%s_E%i', props['tensor_name'], i)
 
     else
       error(string.format('%s is not a valid orientation', orientation))
     end
 
-    t('\\draw[tensorleg] (%f,%f) -- coordinate[midway] (%s) (%f,%f);', x1, y1, name, x2, y2)
+    t('\\draw[%s] (%f,%f) -- coordinate[midway] (%s) (%f,%f);', props['leg_style'], x1, y1, name, x2, y2)
   end
 end
 
@@ -101,11 +101,13 @@ end
 -- Public functions -----------------------------------------------------------
 
 mptikz.defaults = {
-  len_vertical_legs = 1.5,
+  len_vertical_legs = 0.25,
   len_horizontal_legs = 0.25,
   tensor_height = 1,
   tensor_width = 1,
-  tensor_name = 'T'
+  tensor_name = 'T',
+  tensor_style = 'draw, fill=orange, rounded corners=0.1cm',
+  leg_style = 'thick'
 }
 
 function mptikz.draw_node(legs, props)
@@ -114,19 +116,19 @@ function mptikz.draw_node(legs, props)
 
   local w = props['tensor_width']
   local h = props['tensor_height']
-  local name = props['tensor_name']
 
   t('\\begin{scope}[shift={(%f,%f)}]', props:get('x', 0), props:get('y', 0))
 
   -- draw the legs first
-  draw_legs('N', legs['N'], props['len_vertical_legs'], w, h, name)
-  draw_legs('S', legs['S'], props['len_vertical_legs'], w, h, name)
-  draw_legs('E', legs['E'], props['len_horizontal_legs'], w, h, name)
-  draw_legs('W', legs['W'], props['len_horizontal_legs'], w, h, name)
+  draw_legs('N', legs['N'], props['len_vertical_legs'], w, h, props)
+  draw_legs('S', legs['S'], props['len_vertical_legs'], w, h, props)
+  draw_legs('E', legs['E'], props['len_horizontal_legs'], w, h, props)
+  draw_legs('W', legs['W'], props['len_horizontal_legs'], w, h, props)
 
   -- draw the node body
-  local rect_src = string.format('\\draw[tensornode] (%f,%f) rectangle (%f,%f) {};', -w/2, -h/2, w/2, h/2)
-  t('\\node (%s) at (0,0) {\\tikz{%s}};', name, rect_src)
+  local rect_src = string.format('\\draw[%s] (%f,%f) rectangle (%f,%f) {};',
+                                 props['tensor_style'], -w/2, -h/2, w/2, h/2)
+  t('\\node (%s) at (0,0) {\\tikz{%s}};', props['tensor_name'], rect_src)
   t('\\end{scope}')
 end
 

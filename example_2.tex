@@ -5,12 +5,12 @@
 \begin{document}
 
 \begin{tikzpicture}
-  \tikzstyle{tensornode}=[draw,minimum size=1, fill=orange, rounded corners=0.1cm]
-  \tikzstyle{tensorleg}=[thick]
+  \tikzstyle{tensornode}=[draw,minimum size=1, fill=green, rounded corners=0.1cm]
 
   \begin{luacode}
      local mpt = require('mptikz')
-     mpt.draw_node({N=1}, {tensor_name=A})
+     local properties = {tensor_name='A', tensor_style='tensornode', len_vertical_legs=1}
+     mpt.draw_node({N=1}, properties)
   \end{luacode}
 
   \node at (A) {$A$};
