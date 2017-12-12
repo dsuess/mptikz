@@ -16,10 +16,33 @@ function ifelse(cond, val_t, val_f)
 end
 
 
-function DefaultTable(init)
-  local res = init
-  if res == nil then
-    res = {}
+function ifnotnil(val, default)
+  return ifelse(val ~= nil, val, default)
+end
+
+
+function table.clone(original)
+  local copy = {}
+  for key, value in pairs(original) do
+    copy[key] = value
+  end
+  return copy
+end
+
+
+function table.update(dict, new_vals)
+  local new_dict = table.clone(dict)
+  for key, val in pairs(new_vals) do
+    new_dict[key] = val
+  end
+  return new_dict
+end
+
+
+function DefaultTable(init, defaults)
+  local res = ifnotnil(defaults, {})
+  if init ~= nil then
+    res = table.update(res, init)
   end
 
   function res:get (key, value)
@@ -65,6 +88,7 @@ function draw_legs(orientation, nr, leglen, width, height, tname)
       y1 = (i / (nr + 1) - 0.5) * width
       y2 = y1
       name = string.format('%s_E%i', tname, i)
+
     else
       error(string.format('%s is not a valid orientation', orientation))
     end
@@ -75,23 +99,31 @@ end
 
 
 -- Public functions -----------------------------------------------------------
-function mptikz.draw_node(legs, props)
-  local legs = DefaultTable(legs)
-  local props = DefaultTable(ifelse(props ~= nil, props, {}))
 
-  local w = props:get('width', 1)
-  local h = props:get('height', 1)
-  local name = props:get('name', 'T')
-  local l_vleg = props:get('l_vleg', 0.5)
-  local l_hleg = props:get('l_hleg', 0.25)
+mptikz.defaults = {
+  len_vertical_legs = 1.5,
+  len_horizontal_legs = 0.25,
+  tensor_height = 1,
+  tensor_width = 1,
+  tensor_name = 'T'
+}
+
+function mptikz.draw_node(legs, props)
+  dbg = require('debugger'); dbg()
+  local legs = DefaultTable(legs, {N=0, E=0, S=0, W=0})
+  local props = DefaultTable(props, mptikz.defaults)
+
+  local w = props['tensor_width']
+  local h = props['tensor_height']
+  local name = props['tensor_name']
 
   t('\\begin{scope}[shift={(%f,%f)}]', props:get('x', 0), props:get('y', 0))
-  -- draw the legs first
-  draw_legs('N', legs:get('N', 0), l_vleg, w, h, name)
-  draw_legs('S', legs:get('S', 0), l_vleg, w, h, name)
-  draw_legs('E', legs:get('E', 0), l_hleg, w, h, name)
-  draw_legs('W', legs:get('W', 0), l_hleg, w, h, name)
 
+  -- draw the legs first
+  draw_legs('N', legs['N'], props['len_vertical_legs'], w, h, name)
+  draw_legs('S', legs['S'], props['len_vertical_legs'], w, h, name)
+  draw_legs('E', legs['E'], props['len_horizontal_legs'], w, h, name)
+  draw_legs('W', legs['W'], props['len_horizontal_legs'], w, h, name)
 
   -- draw the node body
   local rect_src = string.format('\\draw[tensornode] (%f,%f) rectangle (%f,%f) {};', -w/2, -h/2, w/2, h/2)

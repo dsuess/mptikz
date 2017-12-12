@@ -9,8 +9,8 @@
   \tikzstyle{tensorleg}=[thick]
 
   \begin{luacode}
-    local mpt = require('mptikz')
-    mpt.draw_node({N=1}, {name='A', width=3})
+     local mpt = require('mptikz')
+     mpt.draw_node({N=1}, {tensor_name=A})
   \end{luacode}
 
   \node at (A) {$A$};
