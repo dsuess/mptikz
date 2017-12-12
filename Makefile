@@ -1,4 +1,4 @@
-%.pdf: %.tex
+%.pdf: %.tex mptikz.lua
 	lualatex -interaction=nonstopmode $<
 
 %.svg: %.pdf
