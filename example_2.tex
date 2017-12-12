@@ -1,0 +1,20 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+\usepackage{luatextra}
+
+\begin{document}
+
+\begin{tikzpicture}
+  \tikzstyle{tensornode}=[draw,minimum size=1, fill=orange, rounded corners=0.1cm]
+  \tikzstyle{tensorleg}=[thick]
+
+  \begin{luacode}
+    local mpt = require('mptikz')
+    mpt.draw_node({N=1}, {name='A', width=3})
+  \end{luacode}
+
+  \node at (A) {$A$};
+  \node [anchor=west] at (A_N1) {$i$};
+\end{tikzpicture}
+
+\end{document}
