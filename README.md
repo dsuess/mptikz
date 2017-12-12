@@ -1,7 +1,7 @@
 mptikz - graphical tensor notation for LuaTeX
 =============================================
 
-The `mptikz` package provides convenience functions for drawing tensor networks in graphical notation.
+The mptikz package provides convenience functions for drawing tensor networks in graphical notation.
 Right now, it manly deals with the 1D tensor networks, i.e. matrix-product states and operators, but it's readily extensible.
 
 ## Drawing single nodes
@@ -34,9 +34,15 @@ Note that all examples rely on `lualatex`, see the [Makefile](Makefile) for the 
 
 \node at (A) {$A$};
 \node [anchor=west] at (A_N1) {$i$};
-\end{tikzpicture}
 ```
 
 <p align='center'>
 	<img height='150' src='img/example_2.svg'>
 </p>
+
+
+## Why LuaTeX?
+
+Sure, mptikz could just as well be implemented in pure PGF/TikZ.
+But the syntax is slightly messy at best and learning Lua is time well spend for me anyway.
+Also, by using TikZ externalize feature, one can compile the document with pdftex, which is generally faster, and only compile the TikZ images using LuaTeX.
