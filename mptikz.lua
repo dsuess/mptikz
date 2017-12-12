@@ -52,19 +52,19 @@ function draw_legs(orientation, nr, leglen, width, height, tname)
       y2 = y1 - leglen
       name = string.format('%s_S%i', tname, i)
 
-    elseif orientation == 'E' then
+    elseif orientation == 'W' then
       x1 = -width/2
       x2 = x1 - leglen
       y1 = (i / (nr + 1) - 0.5) * width
       y2 = y1
-      name = string.format('%s_E%i', tname, i)
+      name = string.format('%s_W%i', tname, i)
 
-    elseif orientation == 'W' then
+    elseif orientation == 'E' then
       x1 = width/2
       x2 = x1 + leglen
       y1 = (i / (nr + 1) - 0.5) * width
       y2 = y1
-      name = string.format('%s_W%i', tname, i)
+      name = string.format('%s_E%i', tname, i)
     else
       error(string.format('%s is not a valid orientation', orientation))
     end
