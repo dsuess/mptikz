@@ -18,8 +18,9 @@
 
     -- Draw MPA using appropriate function
     mpt.defaults['tensor_style'] = style .. ', fill=green'
-    mpt.draw_mpa(3, {N=1}, {y=-1.5})
+    mpt.draw_mpa(3, {N=1}, {y=-1.5, tensor_name='A'})
   \end{luacode}
+  \node at (A_2) {$A$};
 \end{tikzpicture}
 
 \end{document}

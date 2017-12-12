@@ -145,7 +145,9 @@ function mptikz.draw_mpa(sites, legs, props)
       W = ifelse(site > 0, legs['virtual']),
       E = ifelse(site < sites - 1, legs['virtual'])
     }
-    mptikz.draw_node(table.update(legs, leg_updates), table.update(props, {x=x}))
+    local name = string.format('%s_%i', props['tensor_name'], site + 1)
+    mptikz.draw_node(table.update(legs, leg_updates),
+                     table.update(props, {x=x, tensor_name=name}))
   end
 end
 
