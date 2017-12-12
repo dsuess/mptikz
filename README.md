@@ -10,8 +10,8 @@ Drawing a simple tensor node is as easy as
 
 ```latex
 \begin{luacode}
-	mpt = require('mptikz')
-	mpt.draw_node({N=2, S=3, E=1})
+    mpt = require('mptikz')
+    mpt.draw_node({N=2, S=3, E=1})
 \end{luacode}
 ```
 
@@ -29,16 +29,16 @@ Also, the exaple below shows how to customize the look of the tensors using the 
 It accepts any valid TikZ style including (as shown below) the name of predefined styles.
 
 ```latex
-  \tikzstyle{tensornode}=[draw, fill=green, rounded corners=0.1cm]
+\tikzstyle{tensornode}=[draw, fill=green, rounded corners=0.1cm]
 
-  \begin{luacode}
-     local mpt = require('mptikz')
-     local properties = {tensor_name='A', tensor_style='tensornode', len_vertical_legs=1}
-     mpt.draw_node({N=1}, properties)
-  \end{luacode}
+\begin{luacode}
+local mpt = require('mptikz')
+    local properties = {tensor_name='A', tensor_style='tensornode', len_vertical_legs=1}
+    mpt.draw_node({N=1}, properties)
+\end{luacode}
 
-  \node at (A) {$A$};
-  \node [anchor=west] at (A_N1) {$i$};
+\node at (A) {$A$};
+\node [anchor=west] at (A_N1) {$i$};
 ```
 
 <p align='center'>
@@ -51,7 +51,7 @@ It accepts any valid TikZ style including (as shown below) the name of predefine
 The task of drawing longer chains of tensors such as MPAs can become tedious.
 Therefore, we provide the `draw_mpa` function shown below, which yields the same ressult as the manual drawing in the same example.
 We also show how to manipulate the `mpt.defaults` table in order to change the styling of tensors globally.
-See [example_3.tex](example_3.tex) for the full code.
+See [example_3.tex](example_3.tex) for the full code
 
 ```latex
 mpt = require('mptikz')
