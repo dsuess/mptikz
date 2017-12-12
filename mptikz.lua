@@ -137,7 +137,7 @@ function mptikz.draw_mpa(sites, legs, props)
   local legs = DefaultTable(legs, {N=0, E=0, S=0, W=0, virtual=1})
   local props = DefaultTable(props, mptikz.defaults)
 
-  local total_width = 2 * props['len_vertical_legs'] + props['tensor_width']
+  local total_width = 2 * props['len_horizontal_legs'] + props['tensor_width']
 
   for site = 0, sites - 1 do
     local x = props:get('x', 0) + site * total_width
