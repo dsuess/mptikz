@@ -1,0 +1,17 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+\usepackage{luatextra}
+
+\begin{document}
+
+\begin{tikzpicture}
+  \tikzstyle{tensornode}=[draw,minimum size=1, fill=orange, rounded corners=0.1cm]
+  \tikzstyle{tensorleg}=[thick]
+
+  \begin{luacode}
+    local mpt = require('mptikz')
+    mpt.draw_node({N=2, S=3, E=1})
+  \end{luacode}
+\end{tikzpicture}
+
+\end{document}
