@@ -109,7 +109,6 @@ mptikz.defaults = {
 }
 
 function mptikz.draw_node(legs, props)
-  dbg = require('debugger'); dbg()
   local legs = DefaultTable(legs, {N=0, E=0, S=0, W=0})
   local props = DefaultTable(props, mptikz.defaults)
 
@@ -129,6 +128,23 @@ function mptikz.draw_node(legs, props)
   local rect_src = string.format('\\draw[tensornode] (%f,%f) rectangle (%f,%f) {};', -w/2, -h/2, w/2, h/2)
   t('\\node (%s) at (0,0) {\\tikz{%s}};', name, rect_src)
   t('\\end{scope}')
+end
+
+
+function mptikz.draw_mpa(sites, legs, props)
+  local legs = DefaultTable(legs, {N=0, E=0, S=0, W=0, virtual=1})
+  local props = DefaultTable(props, mptikz.defaults)
+
+  local total_width = 2 * props['len_vertical_legs'] + props['tensor_width']
+
+  for site = 0, sites - 1 do
+    local x = props:get('x', 0) + site * total_width
+    local leg_updates = {
+      W = ifelse(site > 0, legs['virtual']),
+      E = ifelse(site < sites - 1, legs['virtual'])
+    }
+    mptikz.draw_node(table.update(legs, leg_updates), table.update(props, {x=x}))
+  end
 end
 
 
