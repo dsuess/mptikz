@@ -107,11 +107,11 @@ mptikz.defaults = {
   tensor_width = 1,
   tensor_name = 'T',
   tensor_style = 'draw, fill=orange, rounded corners=0.1cm',
-  leg_style = 'thick'
+  leg_style = 'thick',
+  N = 0, W = 0, S = 0, E = 0, virtual=1
 }
 
-function mptikz.draw_node(legs, props)
-  local legs = DefaultTable(legs, {N=0, E=0, S=0, W=0})
+function mptikz.draw_node(props)
   local props = DefaultTable(props, mptikz.defaults)
 
   local w = props['tensor_width']
@@ -120,10 +120,10 @@ function mptikz.draw_node(legs, props)
   t('\\begin{scope}[shift={(%f,%f)}]', props:get('x', 0), props:get('y', 0))
 
   -- draw the legs first
-  draw_legs('N', legs['N'], props['len_vertical_legs'], w, h, props)
-  draw_legs('S', legs['S'], props['len_vertical_legs'], w, h, props)
-  draw_legs('E', legs['E'], props['len_horizontal_legs'], w, h, props)
-  draw_legs('W', legs['W'], props['len_horizontal_legs'], w, h, props)
+  draw_legs('N', props['N'], props['len_vertical_legs'], w, h, props)
+  draw_legs('S', props['S'], props['len_vertical_legs'], w, h, props)
+  draw_legs('E', props['E'], props['len_horizontal_legs'], w, h, props)
+  draw_legs('W', props['W'], props['len_horizontal_legs'], w, h, props)
 
   -- draw the node body
   local rect_src = string.format('\\draw[%s] (%f,%f) rectangle (%f,%f) {};',
@@ -133,21 +133,19 @@ function mptikz.draw_node(legs, props)
 end
 
 
-function mptikz.draw_mpa(sites, legs, props)
-  local legs = DefaultTable(legs, {N=0, E=0, S=0, W=0, virtual=1})
+function mptikz.draw_mpa(sites, props)
   local props = DefaultTable(props, mptikz.defaults)
 
   local total_width = 2 * props['len_vertical_legs'] + props['tensor_width']
 
   for site = 0, sites - 1 do
-    local x = props:get('x', 0) + site * total_width
-    local leg_updates = {
-      W = ifelse(site > 0, legs['virtual']),
-      E = ifelse(site < sites - 1, legs['virtual'])
+    local updates = {
+      W = ifelse(site > 0, props['virtual']),
+      E = ifelse(site < sites - 1, props['virtual']),
+      x = props:get('x', 0) + site * total_width,
+      tensor_name = string.format('%s_%i', props['tensor_name'], site + 1)
     }
-    local name = string.format('%s_%i', props['tensor_name'], site + 1)
-    mptikz.draw_node(table.update(legs, leg_updates),
-                     table.update(props, {x=x, tensor_name=name}))
+    mptikz.draw_node(table.update(props, updates))
   end
 end
 

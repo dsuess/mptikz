@@ -9,8 +9,7 @@
 
   \begin{luacode}
      local mpt = require('mptikz')
-     local properties = {tensor_name='A', tensor_style='tensornode', len_vertical_legs=1}
-     mpt.draw_node({N=1}, properties)
+     mpt.draw_node({N=1, tensor_name='A', tensor_style='tensornode', len_vertical_legs=1})
   \end{luacode}
 
   \node at (A) {$A$};

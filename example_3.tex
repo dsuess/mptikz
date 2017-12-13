@@ -12,13 +12,13 @@
     mpt.defaults['tensor_style'] = style
 
     -- Draw MPA manually
-    mpt.draw_node({S=1, W=0, E=1}, {x=0})
-    mpt.draw_node({S=1, W=1, E=1}, {x=1.5})
-    mpt.draw_node({S=1, W=1, E=0}, {x=3.0})
+    mpt.draw_node({S=1, W=0, E=1, x=0})
+    mpt.draw_node({S=1, W=1, E=1, x=1.5})
+    mpt.draw_node({S=1, W=1, E=0, x=3.0})
 
     -- Draw MPA using appropriate function
     mpt.defaults['tensor_style'] = style .. ', fill=green'
-    mpt.draw_mpa(3, {N=1}, {y=-1.5, tensor_name='A'})
+    mpt.draw_mpa(3, {N=1, y=-1.5, tensor_name='A'})
   \end{luacode}
   \node at (A_2) {$A$};
 \end{tikzpicture}

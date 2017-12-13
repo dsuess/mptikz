@@ -10,8 +10,8 @@ Drawing a simple tensor node is as easy as
 
 ```latex
 \begin{luacode}
-    mpt = require('mptikz')
-    mpt.draw_node({N=2, S=3, E=1})
+  mpt = require('mptikz')
+  mpt.draw_node({N=2, S=3, E=1})
 \end{luacode}
 ```
 
@@ -29,12 +29,11 @@ Also, the exaple below shows how to customize the look of the tensors using the 
 It accepts any valid TikZ style including (as shown below) the name of predefined styles.
 
 ```latex
-\tikzstyle{tensornode}=[draw, fill=green, rounded corners=0.1cm]
+\tikzstyle{tensornode}=[draw,minimum size=1, fill=green, rounded corners=0.1cm]
 
 \begin{luacode}
-local mpt = require('mptikz')
-    local properties = {tensor_name='A', tensor_style='tensornode', len_vertical_legs=1}
-    mpt.draw_node({N=1}, properties)
+  local mpt = require('mptikz')
+  mpt.draw_node({N=1, tensor_name='A', tensor_style='tensornode', len_vertical_legs=1})
 \end{luacode}
 
 \node at (A) {$A$};
@@ -54,19 +53,18 @@ We also show how to manipulate the `mpt.defaults` table in order to change the s
 See [example_3.tex](example_3.tex) for the full code
 
 ```latex
-mpt = require('mptikz')
 local style = 'draw, fill=orange, rounded corners=0.1cm'
 mpt.defaults['len_vertical_legs'] = 0.25
 mpt.defaults['tensor_style'] = style
 
 -- Draw MPA manually
-mpt.draw_node({S=1, W=0, E=1}, {x=0})
-mpt.draw_node({S=1, W=1, E=1}, {x=1.5})
-mpt.draw_node({S=1, W=1, E=0}, {x=3.0})
+mpt.draw_node({S=1, W=0, E=1, x=0})
+mpt.draw_node({S=1, W=1, E=1, x=1.5})
+mpt.draw_node({S=1, W=1, E=0, x=3.0})
 
 -- Draw MPA using appropriate function
 mpt.defaults['tensor_style'] = style .. ', fill=green'
-mpt.draw_mpa(3, {N=1}, {y=-1.5})
+mpt.draw_mpa(3, {N=1, y=-1.5, tensor_name='A'})
 ```
 
 <p align='center'>

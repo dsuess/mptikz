@@ -1,3 +1,8 @@
+TIKZFILES := $(wildcard *.tex)
+all: $(TIKZFILES:%.tex=%.svg)
+	echo "Done"
+.PHONY: all
+
 %.pdf: %.tex mptikz.lua
 	lualatex -interaction=nonstopmode $<
 
