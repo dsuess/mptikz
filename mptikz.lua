@@ -93,7 +93,8 @@ function draw_legs(orientation, nr, leglen, width, height, props)
       error(string.format('%s is not a valid orientation', orientation))
     end
 
-    t('\\draw[%s] (%f,%f) -- coordinate[midway] (%s) (%f,%f);', props['leg_style'], x1, y1, name, x2, y2)
+    t('\\draw[%s] (%f,%f) -- coordinate[midway] (%s) (%f,%f) coordinate (%s);',
+      props['leg_style'], x1, y1, name, x2, y2, name .. 'e')
   end
 end
 
