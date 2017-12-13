@@ -1,0 +1,9 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{mptikz}[2017/12/13 MPTikZ]
+
+\directlua{MPT_MODULE = require('mptikz')}
+
+\newcommand{\drawnode}[1]{\directlua{MPT_MODULE.draw_node(#1)}}
+\newcommand{\drawmpa}[2]{\directlua{MPT_MODULE.draw_mpa(#1, #2)}}
+
+\endinput
