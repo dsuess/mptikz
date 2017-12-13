@@ -73,6 +73,11 @@ mpt.draw_mpa(3, {N=1}, {y=-1.5})
 	<img height='150' src='img/example_3.svg'>
 </p>
 
+
+## More examples
+
+For more examples, see the [documentation of mpnum](https://github.com/dseuss/mpnum/tree/feat-docs/docs/fig).
+
 ## Why LuaTeX?
 
 Sure, mptikz could just as well be implemented in pure PGF/TikZ.
