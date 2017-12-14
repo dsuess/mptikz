@@ -71,6 +71,29 @@ See [example_3.tex](example_3.tex) for the full code
 For naming the tensors, we simply append `_i` to the given name, where `i` is the number of the tensor starting with 1.
 Therefore, if we want to address the northern leg of the 2nd tensor, we can use the keys `A_2_N1` and `A_2_N1e`.
 
+## Lua Interface
+
+Beside the TeX interface, we also provide a Lua interface to the drawing functions.
+See [example_4.tex](example_4.tex) for the full code.
+
+```Lua
+for i = 1, nr_rows do
+  local name = string.format('T%i', i)
+  mptikz.draw_mpa(nr_cols, {y=-(i - 1) * 1.5, tensor_name=name})
+
+  for j = 1, nr_cols do
+    local node_name = string.format('T%i_%i', i, j)
+    local node_label = string.format('$T_{%i,%i}$', i, j)
+    local tex_cmd = string.format('\\node at (%s) {%s};', node_name, node_label)
+    tex.print(tex_cmd)
+  end
+end
+```
+
+<p align='center'>
+	<img height='150' src='img/example_4.svg'>
+</p>
+
 
 ## More examples
 

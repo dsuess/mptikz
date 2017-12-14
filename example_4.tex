@@ -1,12 +1,26 @@
 \RequirePackage{luatex85}
 \documentclass[tikz]{standalone}
-\usepackage{luatextra}
 \usepackage{mptikz}
-
 \begin{document}
 
 \begin{tikzpicture}
-  \drawmpa{4}{{N=1}}
+  \begin{luacode}
+    local nr_rows = 6
+    local nr_cols = 8
+    mptikz.set_style({N=1, S=1, len_vertical_legs=0.25, len_horizontal_legs=0.25})
+
+    for i = 1, nr_rows do
+      local name = string.format('T%i', i)
+      mptikz.draw_mpa(nr_cols, {y=-(i - 1) * 1.5, tensor_name=name})
+
+      for j = 1, nr_cols do
+        local node_name = string.format('T%i_%i', i, j)
+        local node_label = string.format('$T_{%i,%i}$', i, j)
+        local tex_cmd = string.format('\\node at (%s) {%s};', node_name, node_label)
+        tex.print(tex_cmd)
+      end
+    end
+  \end{luacode}
 \end{tikzpicture}
 
 \end{document}
