@@ -4,20 +4,15 @@
 \begin{document}
 
 \begin{tikzpicture}
-  \begin{luacode}
-    local style = 'draw, fill=orange, rounded corners=0.1cm'
-    mptikz.defaults['len_vertical_legs'] = 0.25
-    mptikz.defaults['tensor_style'] = style
+  \tensorstyle{{len_vertical_legs=0.25, tensor_style='draw, fill=orange, rounded corners=0.1cm'}}
+  % Draw MPA manually
+  \tensor{{S=1, W=0, E=1, x=0}}
+  \tensor{{S=1, W=1, E=1, x=1.5}}
+  \tensor{{S=1, W=1, E=0, x=3.0}}
 
-    -- Draw MPA manually
-    mptikz.draw_tensor({S=1, W=0, E=1, x=0})
-    mptikz.draw_tensor({S=1, W=1, E=1, x=1.5})
-    mptikz.draw_tensor({S=1, W=1, E=0, x=3.0})
-
-    -- Draw MPA using appropriate function
-    mptikz.defaults['tensor_style'] = style .. ', fill=green'
-    mptikz.draw_mpa(3, {N=1, y=-1.5, tensor_name='A'})
-  \end{luacode}
+  % Draw MAP using appropriate function
+  \tensorstyle{{tensor_style='draw, fill=green, rounded corners=0.1cm'}}
+  \mpa{3}{{N=1, y=-1.5, tensor_name='A'}}
   \node at (A_2) {$A$};
 \end{tikzpicture}
 

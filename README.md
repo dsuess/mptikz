@@ -47,33 +47,29 @@ For each legs, two different TikZ coordinates are defined:
 
 ## Drawing more complex MPAs
 
-Beside the TeX interface, we also provide a Lua interface to most functions.
-The equivalent to `\tensor` is the `mptikz.draw_tensor` function in Lua.
-This also allows easily modifying style arguments as shown below.
-For drawing chain of tensors (so called Matrix Product Arrays), we provide the `\mpa` and `mptikz.draw_mpa` functions shown below
-We also show how to manipulate the `mptikz.defaults` table in order to change the styling of tensors globally.
+For drawing chain of tensors (so called Matrix Product Arrays), we provide the `\mpa` functions shown below.
+We also show how to manipulate the default values for styling using the `\tensorstyle` command.
 See [example_3.tex](example_3.tex) for the full code
 
 ```latex
-\begin{luacode}
-  local style = 'draw, fill=orange, rounded corners=0.1cm'
-  mptikz.defaults['len_vertical_legs'] = 0.25
-  mptikz.defaults['tensor_style'] = style
+\tensorstyle{{len_vertical_legs=0.25, tensor_style='draw, fill=orange, rounded corners=0.1cm'}}
+% Draw MPA manually
+\tensor{{S=1, W=0, E=1, x=0}}
+\tensor{{S=1, W=1, E=1, x=1.5}}
+\tensor{{S=1, W=1, E=0, x=3.0}}
 
-  -- Draw MPA manually
-  mptikz.draw_tensor({S=1, W=0, E=1, x=0})
-  mptikz.draw_tensor({S=1, W=1, E=1, x=1.5})
-  mptikz.draw_tensor({S=1, W=1, E=0, x=3.0})
-
-  -- Draw MPA using appropriate function
-  mptikz.defaults['tensor_style'] = style .. ', fill=green'
-  mptikz.draw_mpa(3, {N=1, y=-1.5, tensor_name='A'})
-\end{luacode}
+% Draw MAP using appropriate function
+\tensorstyle{{tensor_style='draw, fill=green, rounded corners=0.1cm'}}
+\mpa{3}{{N=1, y=-1.5, tensor_name='A'}}
+\node at (A_2) {$A$};
 ```
 
 <p align='center'>
 	<img height='150' src='img/example_3.svg'>
 </p>
+
+For naming the tensors, we simply append `_i` to the given name, where `i` is the number of the tensor starting with 1.
+Therefore, if we want to address the northern leg of the 2nd tensor, we can use the keys `A_2_N1` and `A_2_N1e`.
 
 
 ## More examples
