@@ -3,7 +3,7 @@ all: $(TIKZFILES:%.tex=%.svg)
 	echo "Done"
 .PHONY: all
 
-%.pdf: %.tex mptikz.lua
+%.pdf: %.tex mptikz.sty
 	lualatex -interaction=nonstopmode $<
 
 %.svg: %.pdf

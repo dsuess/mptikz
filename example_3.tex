@@ -1,24 +1,22 @@
 \RequirePackage{luatex85}
 \documentclass[tikz]{standalone}
-\usepackage{luatextra}
-
+\usepackage{mptikz}
 \begin{document}
 
 \begin{tikzpicture}
   \begin{luacode}
-    mpt = require('mptikz')
     local style = 'draw, fill=orange, rounded corners=0.1cm'
-    mpt.defaults['len_vertical_legs'] = 0.25
-    mpt.defaults['tensor_style'] = style
+    mptikz.defaults['len_vertical_legs'] = 0.25
+    mptikz.defaults['tensor_style'] = style
 
     -- Draw MPA manually
-    mpt.draw_node({S=1, W=0, E=1, x=0})
-    mpt.draw_node({S=1, W=1, E=1, x=1.5})
-    mpt.draw_node({S=1, W=1, E=0, x=3.0})
+    mptikz.draw_tensor({S=1, W=0, E=1, x=0})
+    mptikz.draw_tensor({S=1, W=1, E=1, x=1.5})
+    mptikz.draw_tensor({S=1, W=1, E=0, x=3.0})
 
     -- Draw MPA using appropriate function
-    mpt.defaults['tensor_style'] = style .. ', fill=green'
-    mpt.draw_mpa(3, {N=1, y=-1.5, tensor_name='A'})
+    mptikz.defaults['tensor_style'] = style .. ', fill=green'
+    mptikz.draw_mpa(3, {N=1, y=-1.5, tensor_name='A'})
   \end{luacode}
   \node at (A_2) {$A$};
 \end{tikzpicture}

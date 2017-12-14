@@ -1,14 +1,10 @@
 \RequirePackage{luatex85}
 \documentclass[tikz]{standalone}
-\usepackage{luatextra}
-
+\usepackage{mptikz}
 \begin{document}
 
 \begin{tikzpicture}
-  \begin{luacode}
-    mpt = require('mptikz')
-    mpt.draw_node({N=2, S=3, E=1})
-  \end{luacode}
+  \tensor{{N=2, S=3, E=1}}
 \end{tikzpicture}
 
 \end{document}
