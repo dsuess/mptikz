@@ -1,7 +1,15 @@
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{mptikz}[2017/12/13 MPTikZ]
 
-\usepackage{luacode}
+\RequirePackage{ifluatex}
+\ifluatex\else
+  \PackageError{mptikz}{LuaTeX is required for this package. Aborting.}{%
+    This package can only be used with the LuaTeX engine^^J%
+    (command ‘lualatex’ or ‘luatex’).^^J%
+    Package loading has been stopped to prevent additional errors.}
+  \expandafter\endinput
+\fi
+\RequirePackage{luacode}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              LUA CODE                               %
