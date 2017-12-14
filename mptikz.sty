@@ -161,6 +161,13 @@ function mptikz.draw_mpa(sites, props)
   end
 end
 
+
+function mptikz.set_style(style)
+  for key, val in pairs(style) do
+    mptikz.defaults[key] = val
+  end
+end
+
 \end{luacode*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -169,5 +176,6 @@ end
 
 \newcommand{\tensor}[1]{\luaexec{mptikz.draw_tensor(#1)}}
 \newcommand{\mpa}[2]{\luaexec{mptikz.draw_mpa(#1, #2)}}
+\newcommand{\tensorstyle}[1]{\luaexec{mptikz.set_style(#1)}}
 
 \endinput
