@@ -1,0 +1,2 @@
+# Mark the sty-file as Lua since it's mostly that
+mptikz.sty  linguist-language=Lua
