@@ -29,6 +29,29 @@ local function ifnotnil(val, default)
 end
 
 
+local function range(a,b,step)
+  step = step or 1
+  if b == nil then a, b = 1, a end
+  if step == 0 then error('ValueError: xrange() arg 3 must not be zero') end
+  if a + step < a then return function() end end
+  a = a - step
+  return function()
+    a = a + step
+    if a <= b then return a end
+  end
+end
+
+
+local function list_iter (t)
+  local i = 0
+  local n = #t
+  return function ()
+    i = i + 1
+    if i <= n then return t[i] end
+  end
+end
+
+
 local function table_clone(original)
   local copy = {}
   for key, value in pairs(original) do
@@ -147,15 +170,23 @@ end
 
 function mptikz.draw_mpa(sites, props)
   local props = DefaultTable(props, mptikz.defaults)
-
   local total_width = 2 * props['len_horizontal_legs'] + props['tensor_width']
+  local nr_sites, iter
 
-  for site = 0, sites - 1 do
+  if type(sites) == 'table' then
+    iter = list_iter(sites)
+    nr_sites = sites[#sites]
+  else
+    iter = range(sites)
+    nr_sites = sites
+  end
+
+  for site in iter do
     local updates = {
-      W = ifelse(site > 0, props['virtual']),
-      E = ifelse(site < sites - 1, props['virtual']),
-      x = props:get('x', 0) + site * total_width,
-      tensor_name = string.format('%s_%i', props['tensor_name'], site + 1)
+      W = ifelse(site > 1, props['virtual']),
+      E = ifelse(site < nr_sites, props['virtual']),
+      x = props:get('x', 0) + (site - 1) * total_width,
+      tensor_name = string.format('%s_%i', props['tensor_name'], site)
     }
     mptikz.draw_tensor(table_update(props, updates))
   end
@@ -163,9 +194,7 @@ end
 
 
 function mptikz.set_style(style)
-  for key, val in pairs(style) do
-    mptikz.defaults[key] = val
-  end
+  mptikz.defaults = table_update(mptikz.defaults, style)
 end
 
 \end{luacode*}
