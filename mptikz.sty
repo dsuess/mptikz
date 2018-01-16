@@ -150,6 +150,8 @@ mptikz.defaults = {
   tensor_name = 'T',
   tensor_style = 'draw, fill=orange, rounded corners=0.1cm',
   leg_style = 'thick',
+  show_name = false,
+  name_style = '';
   -- default values for the legs
   N = 0, W = 0, S = 0, E = 0, virtual=1
 }
@@ -172,6 +174,9 @@ function mptikz.draw_tensor(props)
   local rect_src = string.format('\\draw[%s] (%f,%f) rectangle (%f,%f) {};',
                                  props['tensor_style'], -w/2, -h/2, w/2, h/2)
   t('\\node (%s) at (0,0) {\\tikz{%s}};', props['tensor_name'], rect_src)
+  if props['show_name'] then
+    t('\\node[%s] at (%s) {$ %s $};', props['name_style'], props['tensor_name'], props['tensor_name'])
+  end
   t('\\end{scope}')
 end
 
