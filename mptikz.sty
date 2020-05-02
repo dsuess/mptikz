@@ -10,6 +10,11 @@
   \expandafter\endinput
 \fi
 \RequirePackage{luacode}
+\RequirePackage{xcolor}
+
+\definecolor{leg_color_EW}{RGB}{164, 202, 199}
+\definecolor{leg_color_NS}{RGB}{56, 95, 113}
+\definecolor{default_fill}{RGB}{224, 237, 244}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                              LUA CODE                               %
@@ -17,6 +22,8 @@
 \begin{luacode*}
 
 -- Helper functions ---------------------------------------------------
+getmetatable('').__index = function(str,i) return string.sub(str,i,i) end
+
 local function t(str, ...)
   local arg = {...}
   tex.print(string.format(str, unpack(arg)))
@@ -77,6 +84,15 @@ local function table_update(dict, new_vals)
   return new_dict
 end
 
+local function check_is_in(element, table)
+  iter = range(#table)
+  for i in iter do
+    if element == table[i] then
+      return true
+    end
+  end
+  return false
+end
 
 local function DefaultTable(init, defaults)
   local res = ifnotnil(defaults, {})
@@ -92,48 +108,92 @@ local function DefaultTable(init, defaults)
 end
 
 
-local function draw_legs(orientation, nr, leglen, width, height, props)
+local function draw_legs(orientation, nr, leglen, width, height, props, wm, hm)
   for i = 1,nr do
     local x1
     local x2
     local y1
     local y2
+    local color
     local name
 
     if orientation == 'N' then
-      x1 = (i / (nr + 1) - 0.5) * width
+      x1 = (i / (nr + 1) - 0.5) * width * wm
       x2 = x1
       y1 = height/2
       y2 = y1 + leglen
+      color = props['leg_color_NS']
       name = string.format('%s_N%i', props['tensor_name'], i)
+      if string.find(props['trace_long'], orientation) then
+        y2 = y1 + props['trace_widthNS'] * (0.5 +  (0.5 - i/(nr+1)) * props['trace_inverterN'])
+        x3 = -x1/width * props['trace_widthNS'] + (width + props['trace_offsetNS']) * props['trace_inverterN']
+        y3 = y2
+        x4 = x3
+        y4 = -height/2 - leglen - props['trace_extensionNS']
+      end
 
     elseif orientation == 'S' then
-      x1 = (i / (nr + 1) - 0.5) * width
+      x1 = (i / (nr + 1) - 0.5) * width * wm
       x2 = x1
       y1 = -height/2
       y2 = y1 - leglen
+      color = props['leg_color_NS']
       name = string.format('%s_S%i', props['tensor_name'], i)
+      if string.find(props['trace_long'], orientation) then
+        y2 = y1 - props['trace_widthNS'] * ( 0.5 +  (0.5 - i/(nr+1)) * props['trace_inverterS'])
+        x3 = -x1/width * props['trace_widthNS'] + (width + props['trace_offsetNS']) * props['trace_inverterS']
+        y3 = y2
+        x4 = x3
+        y4 = height/2 + leglen + props['trace_extensionNS']
+      end
+      -- t('\\coordinate (%s) at (%f,%f);', name .. 'b', x1, y1-height/2)
 
     elseif orientation == 'W' then
       x1 = -width/2
       x2 = x1 - leglen
-      y1 = (i / (nr + 1) - 0.5) * width
+      y1 = (0.5 - i / (nr + 1)) * height * hm
       y2 = y1
+      color = props['leg_color_EW']
       name = string.format('%s_W%i', props['tensor_name'], i)
+      if string.find(props['trace_long'], orientation) then
+        x2 = x1 - props['trace_widthEW'] * (0.5 +  (0.5 - i/(nr+1)) * props['trace_inverterW'])
+        y3 = -y1/height * props['trace_widthEW'] - (height + props['trace_offsetEW']) * props['trace_inverterW']
+        x3 = x2
+        y4 = y3
+        x4 = width/2 + leglen + props['trace_extensionEW']
+      end
+
 
     elseif orientation == 'E' then
       x1 = width/2
       x2 = x1 + leglen
-      y1 = (i / (nr + 1) - 0.5) * width
+      y1 = (0.5 - i / (nr + 1)) * height * hm
       y2 = y1
+      color = props['leg_color_EW']
       name = string.format('%s_E%i', props['tensor_name'], i)
+      if string.find(props['trace_long'], orientation) then
+        x2 = x1 + props['trace_widthEW'] * (0.5 +  (0.5 - i/(nr+1)) * props['trace_inverterE'])
+        y3 = -y1/height * props['trace_widthEW']  - (height + props['trace_offsetEW']) * props['trace_inverterE']
+        x3 = x2
+        y4 = y3
+        x4 = -width/2 - leglen - props['trace_extensionEW']
+      end
 
     else
       error(string.format('%s is not a valid orientation', orientation))
     end
 
-    t('\\draw[%s] (%f,%f) -- coordinate[midway] (%s) (%f,%f) coordinate (%s);',
-      props['leg_style'], x1, y1, name, x2, y2, name .. 'e')
+    
+    if string.find(props['trace_long'], orientation) then
+      t('\\draw[%s,%s] (%f, %f) coordinate (%s) --  (%f,%f) -- (%f, %f) -- coordinate[midway] (%s) (%f,%f) coordinate (%s);',
+        props['leg_style'], color, x1, y1, name .. 'b', x2, y2, x3, y3, name, x4, y4, name .. 'e')
+    else
+      t('\\draw[%s, %s] (%f,%f) coordinate (%s) -- coordinate[midway] (%s) (%f,%f) coordinate (%s);',
+      props['leg_style'], color, x1, y1, name .. 'b', name, x2, y2, name .. 'e')
+      if string.find(props['trace_short'], orientation) then
+        t('\\draw[red, fill=red] (%f,%f) circle (.5mm);', x2, y2)
+      end
+    end
   end
 end
 
@@ -141,19 +201,40 @@ end
 -- Public functions ---------------------------------------------------
 mptikz = {}
 
+mptikz.last_BL = {0}
+
 mptikz.defaults = {
   -- default style values
   len_vertical_legs = 0.25,
   len_horizontal_legs = 0.25,
-  tensor_height = 1,
-  tensor_width = 1,
+  tensor_height = 0.75,
+  tensor_width = 0.75,
+  leg_W_mult = 1.0,
+  leg_H_mult = 1.0,
   tensor_name = 'T',
-  tensor_style = 'draw, fill=orange, rounded corners=0.1cm',
-  leg_style = 'thick',
+  tensor_style = 'draw, fill=default_fill, rounded corners=0.1cm',
+  leg_style = 'line width = 1mm',
+  leg_color_EW = 'leg_color_EW',
+  leg_color_NS = 'leg_color_NS',
   show_name = false,
   name_style = '';
+  trace_short = '';
+  trace_long = '';
+  trace_extensionNS = 0;
+  trace_extensionEW = 0;
+  trace_widthNS = 0.5;
+  trace_widthEW = 0.5;
+  trace_offsetNS = 0;
+  trace_offsetEW = 0;
+  -- long trace side inverter (+1 = original side, -1 = opposite side)
+  trace_inverterN = 1;
+  trace_inverterE = 1;
+  trace_inverterS = 1;
+  trace_inverterW = 1;
   -- default values for the legs
-  N = 0, W = 0, S = 0, E = 0, virtual=1
+  N = 0, W = 0, S = 0, E = 0, virtual=1;
+  -- drawing order of the legs
+  legs_order = 'NSEW';
 }
 
 function mptikz.draw_tensor(props)
@@ -165,10 +246,19 @@ function mptikz.draw_tensor(props)
   t('\\begin{scope}[shift={(%f,%f)}]', props:get('x', 0), props:get('y', 0))
 
   -- draw the legs first
-  draw_legs('N', props['N'], props['len_vertical_legs'], w, h, props)
-  draw_legs('S', props['S'], props['len_vertical_legs'], w, h, props)
-  draw_legs('E', props['E'], props['len_horizontal_legs'], w, h, props)
-  draw_legs('W', props['W'], props['len_horizontal_legs'], w, h, props)
+  local order = props['legs_order']
+  for i in range(4) do
+    local str = 'len_horizontal_legs'
+    if order[i] == 'N' or order[i] == 'S' then
+      str = 'len_vertical_legs'
+    end
+    draw_legs(order[i], props[order[i]], props[str], w, h, props, props['leg_W_mult'], props['leg_H_mult'])
+  end
+
+  -- draw_legs('N', props['N'], props['len_vertical_legs'], w, h, props)
+  -- draw_legs('S', props['S'], props['len_vertical_legs'], w, h, props)
+  -- draw_legs('E', props['E'], props['len_horizontal_legs'], w, h, props)
+  -- draw_legs('W', props['W'], props['len_horizontal_legs'], w, h, props)
 
   -- draw the node body
   local rect_src = string.format('\\draw[%s] (%f,%f) rectangle (%f,%f) {};',
@@ -180,34 +270,122 @@ function mptikz.draw_tensor(props)
   t('\\end{scope}')
 end
 
-
-function mptikz.draw_mpa(sites, props)
+function mptikz.draw_mpa(sites, props, trace_mode)
   local props = DefaultTable(props, mptikz.defaults)
   local total_width = 2 * props['len_horizontal_legs'] + props['tensor_width']
-  local nr_sites, iter
+  local nr_sites_prev = 0, n_blocks, iter_b
 
   if type(sites) == 'table' then
-    iter = list_iter(sites)
-    nr_sites = sites[#sites]
+    n_blocks = #sites
+    iter_b = range(n_blocks)
   else
-    iter = range(sites)
-    nr_sites = sites
+    n_blocks = 1
+    iter_b = range(1)
+    sites = {sites}
+  end
+  mptikz.last_BL = sites
+
+  local traceNS = props:get('traceNS', {})
+  local n_trace_blocks = #traceNS
+  
+  for block in iter_b do
+    local iter = range(sites[block])
+    local nr_sites = sites[block]
+    local tracing = ifelse(block <= n_trace_blocks, traceNS[block], {})
+
+    for site in iter do
+      local ns = ifelse(check_is_in(site, tracing), 'NS','')
+
+      local short1 = ifelse(site == 1 and block == 1 and trace_mode == 1, 'W', '')
+      local shortend = ifelse(site == nr_sites and block == n_blocks and trace_mode == 1, 'E', '')
+      local long1 = ifelse(site == 1 and block == 1 and trace_mode == 2, 'W', '')
+      local longend = ifelse(site == nr_sites and block == n_blocks and trace_mode == 2, 'E', '') 
+      local updates = {
+        trace_short = props['trace_short'] .. short1 .. shortend,
+        trace_long = props['trace_long'] .. long1 .. longend .. ns,
+        x = props:get('x', 0) + (nr_sites_prev + site - 1) * total_width + 0.8*(block-1),
+        tensor_name = string.format('%s_%i_%i', props['tensor_name'], block, site)
+      }
+      mptikz.draw_tensor(table_update(props, updates))
+
+    end
+    nr_sites_prev = nr_sites_prev + nr_sites
+    if block < n_blocks then
+      local x, y
+      x = props:get('x', 0) + (nr_sites_prev - 1/2) * total_width + 0.8*(block-1) + 0.4
+      y = props:get('y', 0)
+      t('\\node at (%f,%f) {$ ... $};', x, y)
+    end
   end
 
-  for site in iter do
-    local updates = {
-      W = ifelse(site > 1, props['virtual']),
-      E = ifelse(site < nr_sites, props['virtual']),
-      x = props:get('x', 0) + (site - 1) * total_width,
-      tensor_name = string.format('%s_%i', props['tensor_name'], site)
-    }
-    mptikz.draw_tensor(table_update(props, updates))
-  end
 end
 
 
 function mptikz.set_style(style)
   mptikz.defaults = table_update(mptikz.defaults, style)
+end
+
+
+function mptikz.block_naming(t_name, specs)
+  specs = DefaultTable(specs, {blocks_lenghts = mptikz.last_BL})
+  local blocks_lenghts = specs:get('blocks_lenghts') -- lengths of the blocks, the code remembers the last block_lengths from mpa
+  local start_indices = specs:get('start_indices',{}) -- table! starting incices for indicisation of each block
+  local index_placer = specs:get('index_placer', '^') -- ^ or _ to place the index up or down
+  local index_parentheses = specs:get('index_parentheses','()') -- parenthesis symbols to put around the index
+  local label = specs:get('label','') -- single string same for every block
+  local labels = specs:get('labels', {}) -- table! of strings, one for each block
+
+  local o_par = index_parentheses[1]
+  local c_par = index_parentheses[2]
+
+  local n_blocks = #blocks_lenghts
+  local blocks = range(n_blocks)
+
+  local nb_labels = #labels
+  local nb_index = #start_indices
+
+  for b in blocks do
+    local n_tensors = blocks_lenghts[b]
+    local tensors = range(n_tensors)
+
+    local block_lab = ''
+    if nb_labels > 0 then
+      block_lab = labels[b]
+    end
+
+    local i_0 = 0
+    local str_0 = ''
+    if nb_index > 0 then
+      local start = start_indices[b]
+      if type(start) == 'number' then
+        i_0 = start
+      elseif type(start) == 'string' then
+        str_0 = start
+      elseif type(start) == 'table' then
+        if type(start[1]) == 'number' then
+          i_0 = start[1]
+          str_0 = start[2]
+        else
+          str_0 = start[1]
+          i_0 = start[2]
+        end
+      else 
+        error(string.format('%s is not a valid type as input for starting index', type(start)))
+      end
+    end
+
+    for ten in tensors do
+      local tensor_name = string.format('%s_%i_%i', t_name, b, ten)
+      idx = ''
+      if nb_index > 0 then
+        num = ifelse((i_0+ten ~= 1) or (str_0 == ''),string.format('%i', i_0+ten-1),'')
+        num = ifelse(i_0+ten>1 and str_0 ~= '','+','') .. num
+        idx = '$' .. index_placer .. '{ ' .. o_par .. str_0 .. num .. c_par .. ' }$'
+      end
+      local lab = label .. block_lab .. idx
+      t('\\node at (%s) {%s};', tensor_name, lab)
+    end
+  end
 end
 
 \end{luacode*}
@@ -217,7 +395,8 @@ end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\tensor}[1]{\luaexec{mptikz.draw_tensor(#1)}}
-\newcommand{\mpa}[2]{\luaexec{mptikz.draw_mpa(#1, #2)}}
 \newcommand{\tensorstyle}[1]{\luaexec{mptikz.set_style(#1)}}
+\newcommand{\mpa}[3][0]{\luaexec{mptikz.draw_mpa(#2, #3, #1)}}
+\newcommand{\tlabel}[2]{\luaexec{mptikz.block_naming(#1, #2)}}
 
 \endinput
