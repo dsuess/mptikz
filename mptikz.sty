@@ -295,14 +295,21 @@ function mptikz.draw_mpa(sites, props, trace_mode)
 
     for site in iter do
       local ns = ifelse(check_is_in(site, tracing), 'NS','')
-
+      		
       local short1 = ifelse(site == 1 and block == 1 and trace_mode == 1, 'W', '')
       local shortend = ifelse(site == nr_sites and block == n_blocks and trace_mode == 1, 'E', '')
+      
       local long1 = ifelse(site == 1 and block == 1 and trace_mode == 2, 'W', '')
       local longend = ifelse(site == nr_sites and block == n_blocks and trace_mode == 2, 'E', '') 
+      
+      local no_legW = ifelse(site == 1 and block == 1 and trace_mode == -1, '0', props['W'])
+      local no_legE = ifelse(site == nr_sites and block == n_blocks and trace_mode == -1, '0', props['E'])
+      
       local updates = {
         trace_short = props['trace_short'] .. short1 .. shortend,
         trace_long = props['trace_long'] .. long1 .. longend .. ns,
+        W = no_legW,
+        E = no_legE,
         x = props:get('x', 0) + (nr_sites_prev + site - 1) * total_width + 0.8*(block-1),
         tensor_name = string.format('%s_%i_%i', props['tensor_name'], block, site)
       }

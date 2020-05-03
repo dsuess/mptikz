@@ -1,0 +1,20 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+\usepackage{mptikz}
+\begin{document}
+
+\begin{tikzpicture}
+	\tensorstyle{{	trace_offsetEW=-0.3, len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85}}
+	\mpa[2]{{2,1,2}}{{N=1,E=1,W=1, y=0.65, tensor_name='A1'}}
+	
+	\draw[line width=1mm, leg_color_EW] (A1_1_1_W1e) -- (A1_3_2_E1e);
+	
+	\tensorstyle{{trace_extensionEW=3}}
+	
+	\mpa[2]{{2,1,2}}{{S=1,E=1,W=1, y=-0.65, tensor_name='A2', trace_inverterE=-1, trace_inverterW=-1}}
+	
+	\tlabel{'A1'}{{ label='$A$' }}
+	\tlabel{'A2'}{{ label='$\\bar{A}$' }}
+\end{tikzpicture}
+
+\end{document}

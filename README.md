@@ -87,7 +87,90 @@ More generally, the first input to `\mpa` is expected to be an array of integers
 For naming the tensors, we simply append `_i_j` to the given name, where `i` is the number of the block and `j` is the number of the tensor within the block (both starting with 1).
 Therefore, if we want to address the northern leg of the 2nd tensor in the 1st block, we can use the keys `A_1_2_N1` and `A_1_2_N1e`.
 
-### Traces
+### Traces and removing external legs
+
+To draw structures akin to those of Matrix Product States one often has to trace out elements in the diagram. The `\mpa` command allows to do so in two ways. First the `\mpa` command has an optional argument that can take the values `-1`, `0`, `1` and `2`.
+
+* `0` is the default value and does nothing.
+
+* `-1` removes the most external (East-West) legs, as shown in [example_5.tex](example_5.tex):
+
+```latex
+\tensorstyle{{len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85 }}
+\mpa[-1]{{2,1,2}}{{N=1,E=1,W=1, y=0.65, tensor_name='A'}}
+
+\tlabel{'A'}{{ label='$A$' }}
+```
+
+<p align='center'>
+	<img height='150' src='img/example_5.svg'>
+</p>
+
+
+* `1` adds red dots on the most external (East-West) legs, as shown in [example_6.tex](example_6.tex):
+
+```latex
+\tensorstyle{{len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85 }}
+\mpa[1]{{2,1,2}}{{N=1,E=1,W=1, y=0.65, tensor_name='A'}}
+
+\tlabel{'A'}{{ label='$A$' }}
+```
+<p align='center'>
+	<img height='150' src='img/example_6.svg'>
+</p>
+
+This is a more "tidy" version of `2`.
+
+* `2` makes most external (East-West) legs loop around as shown in [example_7.tex](example_7.tex), so they are easier to link as shown in [example_8.tex](example_8.tex).
+
+Example 7:
+
+```latex
+\tensorstyle{{len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85 }}
+\mpa[2]{{2,1,2}}{{N=1,E=1,W=1, y=0.65, tensor_name='A'}}
+
+\tlabel{'A'}{{ label='$A$' }}
+```
+
+<p align='center'>
+	<img height='150' src='img/example_7.svg'>
+</p>
+
+Example 8:
+
+```latex
+\tensorstyle{{trace_offsetEW=-0.3, len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85}}
+\mpa[2]{{2,1,2}}{{N=1,E=1,W=1, y=0.65, tensor_name='A1'}}
+	
+\draw[line width=1mm, leg_color_EW] (A1_1_1_W1e) -- (A1_3_2_E1e);
+	
+\tensorstyle{{trace_extensionEW=3}}
+	
+\mpa[2]{{2,1,2}}{{S=1,E=1,W=1, y=-0.65, tensor_name='A2', trace_inverterE=-1, trace_inverterW=-1}}
+	
+\tlabel{'A1'}{{ label='$A$' }}
+\tlabel{'A2'}{{ label='$\\bar{A}$' }}
+```
+
+<p align='center'>
+	<img height='150' src='img/example_8.svg'>
+</p>
+
+This examples features two ways to link the lines that were looped by the option: 
+
+1. By using the `\draw` command of tikz with the tikz coordinates for the ends of the lines. The color names `leg_color_EW` and `leg_color_NS` are loaded with the package to the default values for horizontal and vertical legs respectively.
+2. By the `trace_extensionEW` option. This styling option only works with the `2` optional argument of `\mpa`. It extends the legth of the line by the given argument, therefore changing the position of the tikz coordinate corresponding to the end of the line. It accepts negative inputs to reduce the length of the line.
+
+The vertical displacement of the looped line changed between the two examples. This is thanks to the `trace_offsetEW` option which allows to control for the displacement of the line looping back.
+
+The `trace_inverterE=-1` and `trace_inverterW=-1` allow us to change the side on which the line is looped around in example 8.
+
+
+
+<!--There are many more options that come into play for `\mpa[2]`, they are all listed here:
+
+* a-->
+
 
 ### Labelling
 
