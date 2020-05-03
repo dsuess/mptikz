@@ -1,0 +1,53 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+\usetikzlibrary{arrows, arrows.meta, positioning,calc}
+\usepackage{xcolor}
+
+\definecolor{c1}{gray}{0.7}
+\definecolor{c2}{gray}{0}
+
+\usepackage{mptikz}
+\begin{document}
+
+\begin{tikzpicture}
+	\tensorstyle{{len_vertical_legs = 0.4, tensor_width=1, tensor_height=1, trace_long='N', leg_style = 'line width = 0.5mm'}}
+	
+	\tensorstyle{{trace_offsetNS=0.2, trace_extensionNS=1}}
+	
+	\mpa{{1}}{{N=3, tensor_name='A1b', leg_color_NS='c1'}}
+	
+	\tensorstyle{{trace_offsetNS=0, trace_extensionNS=0}}
+	
+	\mpa{{1}}{{N=3, tensor_name='A1f', leg_color_NS='c2'}}
+	
+	\tlabel{'A1f'}{{ label='$A$' }}
+	
+	
+	\draw[red, line width=0.4mm] ([yshift=-0.25mm]A1f_1_1_N3m) -- coordinate[midway] (t1) ++(0,0.3);
+	\node[above right=0.5mm and -1mm, red] at (t1) {w};
+	
+	\draw[red, line width=0.4mm] ([xshift=-0.25mm]A1f_1_1_N3) -- coordinate[midway] (t2) ++(0.3,0);
+	\node[above right=-0.9mm and 0.3mm, red] at (t2) {w'};
+	
+	
+	\draw[red, line width=0.4mm]  (A1f_1_1_N2e) -- coordinate[midway] (t3) ++(0.2,0);
+	\node[above right=-0.7mm and -0.5mm, red] at (t3) {a};
+	
+	\draw[>=latex, <->,red] (A1b_1_1_N1e) -- coordinate[midway] (t4) ++(0,1);
+	\node[right= -0.7mm, red] at (t4) {e};
+	
+	\tensorstyle{{x=2.5, leg_W_mult=1.5, trace_long=''}}
+	
+	\mpa{{1}}{{N=3, tensor_name='A2b', leg_color_NS='c1', len_vertical_legs = 0.35}}
+	
+	\tensorstyle{{leg_W_mult=1.0}}
+	
+	\mpa{{1}}{{N=3, tensor_name='A2f', leg_color_NS='c2', len_vertical_legs = 0.25}}
+	
+	\tlabel{'A2f'}{{ label='$A$' }}
+	
+	\draw[>=latex, <->,blue] ([yshift=-0.3mm]A2b_1_1_N1e) -- ([yshift=-0.3mm]A2b_1_1_N3e);
+	\draw[>=latex, <->,green] ([yshift=-0.3mm]A2f_1_1_N1e) -- ([yshift=-0.3mm]A2f_1_1_N3e);
+\end{tikzpicture}
+
+\end{document}

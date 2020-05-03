@@ -185,8 +185,8 @@ local function draw_legs(orientation, nr, leglen, width, height, props, wm, hm)
 
     
     if string.find(props['trace_long'], orientation) then
-      t('\\draw[%s,%s] (%f, %f) coordinate (%s) --  (%f,%f) -- (%f, %f) -- coordinate[midway] (%s) (%f,%f) coordinate (%s);',
-        props['leg_style'], color, x1, y1, name .. 'b', x2, y2, x3, y3, name, x4, y4, name .. 'e')
+      t('\\draw[%s,%s] (%f, %f) coordinate (%s) --  (%f,%f) -- coordinate[midway] (%s) (%f, %f) -- coordinate[midway] (%s) (%f,%f) coordinate (%s);',
+        props['leg_style'], color, x1, y1, name .. 'b', x2, y2,  name .. 'm', x3, y3, name, x4, y4, name .. 'e')
     else
       t('\\draw[%s, %s] (%f,%f) coordinate (%s) -- coordinate[midway] (%s) (%f,%f) coordinate (%s);',
       props['leg_style'], color, x1, y1, name .. 'b', name, x2, y2, name .. 'e')

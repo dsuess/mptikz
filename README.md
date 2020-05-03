@@ -45,7 +45,7 @@ It accepts any valid TikZ style including (as shown below) the name of predefine
 </p>
 
 For each legs, two different TikZ coordinates are defined:
-`A_N1` stands for the middle first northern leg of the tensor `A` and `A_N1e` stands for the end of that leg.
+`A_N1` stands for the middle first northern leg of the tensor `A`, `A_N1e` stands for the end of that leg and `A_N1b` for the base of the leg.
 
 ## Drawing more complex MPAs
 
@@ -81,11 +81,11 @@ More generally, the first input to `\mpa` is expected to be an array of integers
 \tlabel{'A'}{{ label='$A$' }}
 ```
 <p align='center'>
-	<img height='150' src='img/example_4.svg'>
+	<img width='500' src='img/example_4.svg'>
 </p>
 
 For naming the tensors, we simply append `_i_j` to the given name, where `i` is the number of the block and `j` is the number of the tensor within the block (both starting with 1).
-Therefore, if we want to address the northern leg of the 2nd tensor in the 1st block, we can use the keys `A_1_2_N1` and `A_1_2_N1e`.
+Therefore, if we want to address the northern leg of the 2nd tensor in the 1st block, we can use the keys `A_1_2_N1`, `A_1_2_N1e` and `A_1_2_N1b`.
 
 ### Traces and removing external legs
 
@@ -103,7 +103,7 @@ To draw structures akin to those of Matrix Product States one often has to trace
 ```
 
 <p align='center'>
-	<img height='150' src='img/example_5.svg'>
+	<img width='500' src='img/example_5.svg'>
 </p>
 
 
@@ -116,7 +116,7 @@ To draw structures akin to those of Matrix Product States one often has to trace
 \tlabel{'A'}{{ label='$A$' }}
 ```
 <p align='center'>
-	<img height='150' src='img/example_6.svg'>
+	<img width='500' src='img/example_6.svg'>
 </p>
 
 This is a more "tidy" version of `2`.
@@ -133,7 +133,7 @@ Example 7:
 ```
 
 <p align='center'>
-	<img height='150' src='img/example_7.svg'>
+	<img width='500' src='img/example_7.svg'>
 </p>
 
 Example 8:
@@ -153,13 +153,15 @@ Example 8:
 ```
 
 <p align='center'>
-	<img height='150' src='img/example_8.svg'>
+	<img width='500' src='img/example_8.svg'>
 </p>
 
 This examples features two ways to link the lines that were looped by the option: 
 
 1. By using the `\draw` command of tikz with the tikz coordinates for the ends of the lines. The color names `leg_color_EW` and `leg_color_NS` are loaded with the package to the default values for horizontal and vertical legs respectively.
 2. By the `trace_extensionEW` option. This styling option only works with the `2` optional argument of `\mpa`. It extends the legth of the line by the given argument, therefore changing the position of the tikz coordinate corresponding to the end of the line. It accepts negative inputs to reduce the length of the line.
+
+The `tikz` coordinate `A1_1_1_W1` is halfway on the "external"/"end" line, with this option there is the new coordinate `A1_1_1_W1m` which is half way on "turn".
 
 The vertical displacement of the looped line changed between the two examples. This is thanks to the `trace_offsetEW` option which allows to control for the displacement of the line looping back.
 
@@ -178,17 +180,54 @@ The same effect can be obtained for the vertical legs of the chain with the styl
 ```
 
 <p align='center'>
-	<img height='150' src='img/example_9.svg'>
+	<img width='500' src='img/example_9.svg'>
 </p>
 
 Here we used `traceNS = {{1,2},{},{1}}` for the first line, so for the first block the 1st and 2nd tensor had the vertical leg looped around, for the second block no leg is looped around since the corresponding array is empty and for the last block we have the array `{1}` therefore only the first tensor has the vertical leg looped around. Whereas for the second line we used `traceNS = {{1},{},{1}}` therefore for the first block only the first tensor has the looped around leg.
 
+With the option `legs_order` which takes as input a string of the form `'NSWE'` or `'EWNS'` one can decide in which order the legs of the tensor are drawn so to decide which is on top of the other at the intersections.
+
 The options `trace_inverterN`, `trace_inverterS`, `trace_offsetNS` and `trace_extensionNS` also exists and have the analogous effect of their horizontal counterparts.
 
 
-<!--There are many more options that come into play for `\mpa[2]`, they are all listed here:
+There are many more options that come into play for `\mpa[2]`, one can use them both in the input of `\mpa` or in with the `\tensorstyle command`.
+All these options are listed here:
 
-* a-->
+* `trace_extensionNS` and `trace_extensionEW` correspond to how much the "long trace" is extended (can take negative values).
+	* e.g. `trace_extensionNS = e` in the visual help below.
+	* default value: `0`.
+
+* `trace_widthNS` and `trace_widthEW` give control to the value of `w` in the visual help below. In the example given `w` and `w'` increase proportionally to `trace_widthNS`.
+	* default value: `0.5`.
+
+* `trace_offsetNS` and `trace_offsetEW` give an offset to the "long" part of the lines (can take negative values).
+	* e.g. `trace_offsetNS = a` in the visual help below.
+	* default value: `0`.
+
+* `trace_inverterN`, `trace_inverterE`, `trace_inverterS` and `trace_inverterW` choose the side on which the lines curve. The allowed inputs are `+1` and `-1`. If `+1` make the line go right, then `-1` will make them go left.
+	*  default value: `+1`.
+
+* `leg_W_mult` and `leg_H_mult` control the width between the lines coming out of a tensor.
+	* 	e.g. In the visual help below `leg_W_mult` corresponds to `leg_W_mult` = `length blue line`/`length green line`.
+	*  default value: `1.0`.
+
+* `legs_order` chooses the order in which the legs are drawn.
+	* `legs_order='EWNS'` will first draw east legs, then west legs, then north legs and finally south legs. Caution: `legs_order='EWN'` will make the code fail and `legs_order='EWNN'` will not draw the south legs.
+	* deafult value: `'NSEW'`.
+
+* `trace_long` chooses which legs are looped around in all of the array. 
+	* e.g. `trace_long='NE'` loops around automatically all north and east lines.
+	* default value: `''`.
+
+* `trace_short` chooses which legs will have a red dot in all of the array. 
+	* e.g. `trace_short='NS'` adds a red dot automatically all north and south lines.
+	* default value: `''`.
+
+visual help (example10):
+<p align='center'>
+	<img width='250' src='img/example_10.svg'>
+</p>
+In this example the black lines correspond to the default and the grey lines correspond the modified version.
 
 
 ### Labelling
