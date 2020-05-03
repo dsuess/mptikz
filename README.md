@@ -165,6 +165,25 @@ The vertical displacement of the looped line changed between the two examples. T
 
 The `trace_inverterE=-1` and `trace_inverterW=-1` allow us to change the side on which the line is looped around in example 8.
 
+The same effect can be obtained for the vertical legs of the chain with the style option `trace_NS`. It takes as argument an array of and array of integers. Each sub-array corresponds to the block of the same index and contains the indices of the tensors within the block that we want to loop around. As is shown in [example_9.tex](example_9.tex):
+
+```latex
+\tensorstyle{{trace_offsetNS=-0.2, len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85 }}
+	
+\mpa[-1]{{2,1,2}}{{N=1,E=1,W=1, y=0.65, tensor_name='A1', traceNS = {{1,2},{},{1}} }}
+\mpa[-1]{{2,1,2}}{{S=1,E=1,W=1, y=-0.65, tensor_name='A2', traceNS = {{1},{},{1}} }}
+	
+\tlabel{'A1'}{{ label='$A$' }}
+\tlabel{'A2'}{{ label='$\\bar{A}$' }}
+```
+
+<p align='center'>
+	<img height='150' src='img/example_9.svg'>
+</p>
+
+Here we used `traceNS = {{1,2},{},{1}}` for the first line, so for the first block the 1st and 2nd tensor had the vertical leg looped around, for the second block no leg is looped around since the corresponding array is empty and for the last block we have the array `{1}` therefore only the first tensor has the vertical leg looped around. Whereas for the second line we used `traceNS = {{1},{},{1}}` therefore for the first block only the first tensor has the looped around leg.
+
+The options `trace_inverterN`, `trace_inverterS`, `trace_offsetNS` and `trace_extensionNS` also exists and have the analogous effect of their horizontal counterparts.
 
 
 <!--There are many more options that come into play for `\mpa[2]`, they are all listed here:
