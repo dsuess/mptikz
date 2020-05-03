@@ -23,7 +23,7 @@ Note the double `{{}}`.
 This draws a tensor with 1, 2, and 3 legs on the left (EAST), top (NORTH), and bottom (SOUTH) position, respectively.
 
 <p align='center'>
-	<img height='150' src='img/example_1.svg'>
+	<img height='150' src='img/example_1.sg'>
 </p>
 
 See [example_1.tex](example_1.tex) for the full source code.
@@ -41,7 +41,7 @@ It accepts any valid TikZ style including (as shown below) the name of predefine
 ```
 
 <p align='center'>
-	<img height='150' src='img/example_2.svg'>
+	<img height='150' src='img/example_2.sg'>
 </p>
 
 For each legs, two different TikZ coordinates are defined:
@@ -67,7 +67,7 @@ See [example_3.tex](example_3.tex) for the full code
 ```
 
 <p align='center'>
-	<img height='150' src='img/example_3.svg'>
+	<img height='150' src='img/example_3.sg'>
 </p>
 
 ### Block structure
