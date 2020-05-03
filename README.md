@@ -81,7 +81,7 @@ More generally, the first input to `\mpa` is expected to be an array of integers
 \tlabel{'A'}{{ label='$A$' }}
 ```
 <p align='center'>
-	<img height='150' src='img/example_4.pdf'>
+	<img height='150' src='img/example_4.svg'>
 </p>
 
 For naming the tensors, we simply append `_i_j` to the given name, where `i` is the number of the block and `j` is the number of the tensor within the block (both starting with 1).
