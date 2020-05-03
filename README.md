@@ -4,6 +4,8 @@ mptikz - graphical tensor notation for LuaTeX
 The mptikz package provides convenience functions for drawing tensor networks in graphical notation.
 Right now, it manly deals with the 1D tensor networks, i.e. matrix-product states and operators, but it's readily extensible.
 
+The original creator of this package is user `dsuess`, this is an extension of his work.
+
 
 ## Installation
 
@@ -68,13 +70,34 @@ See [example_3.tex](example_3.tex) for the full code
 	<img height='150' src='img/example_3.svg'>
 </p>
 
-For naming the tensors, we simply append `_i` to the given name, where `i` is the number of the tensor starting with 1.
-Therefore, if we want to address the northern leg of the 2nd tensor, we can use the keys `A_2_N1` and `A_2_N1e`.
+### Block structure
+
+More generally, the first input to `\mpa` is expected to be an array of integers, and the function will draw blocks of tensors separated by ellipses according to the input. As shown in [example_4.tex](example_4.tex) for the input `{3,2,1}` we get 3 blocks: the first with 3 tensors, the second with 2 and the last with 1. The function `\tlabel` also allows to name every tensor in the array at once (to use a `\` in the label, to put for instance a greek letter, one has to use `\\` instead, more on that below).
+
+```latex
+\tensorstyle{{len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85 }}
+\mpa{{3,2,1}}{{N=1,E=1,W=1, y=0.65, tensor_name='A'}}
+
+\tlabel{'A'}{{ label='$A$' }}
+```
+<p align='center'>
+	<img height='150' src='img/example_4.pdf'>
+</p>
+
+For naming the tensors, we simply append `_i_j` to the given name, where `i` is the number of the block and `j` is the number of the tensor within the block (both starting with 1).
+Therefore, if we want to address the northern leg of the 2nd tensor in the 1st block, we can use the keys `A_1_2_N1` and `A_1_2_N1e`.
+
+### Traces
+
+### Labelling
+
+## Tensor Style Parameters
+
 
 ## Lua Interface
 
 Beside the TeX interface, we also provide a Lua interface to the drawing functions.
-See [example_4.tex](example_4.tex) for the full code.
+See [example_e.tex](example_e.tex) for the full code.
 
 ```Lua
 for i = 1, nr_rows do
@@ -91,7 +114,7 @@ end
 ```
 
 <p align='center'>
-	<img height='150' src='img/example_4.svg'>
+	<img height='150' src='img/example_e.svg'>
 </p>
 
 
@@ -107,4 +130,3 @@ Many of the things there could have been down easier using the pure latex interf
 Sure, mptikz could just as well be implemented in pure PGF/TikZ.
 But the syntax is slightly messy at best and learning Lua is time well spend for me anyway.
 Also, by using TikZ externalize feature, one can compile the document with pdftex, which is generally faster, and only compile the TikZ images using LuaTeX.
-

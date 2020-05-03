@@ -4,23 +4,11 @@
 \begin{document}
 
 \begin{tikzpicture}
-  \begin{luacode}
-    local nr_rows = 6
-    local nr_cols = 8
-    mptikz.set_style({N=1, S=1, len_vertical_legs=0.25, len_horizontal_legs=0.25})
-
-    for i = 1, nr_rows do
-      local name = string.format('T%i', i)
-      mptikz.draw_mpa(nr_cols, {y=-(i - 1) * 1.5, tensor_name=name})
-
-      for j = 1, nr_cols do
-        local node_name = string.format('T%i_%i', i, j)
-        local node_label = string.format('$T_{%i,%i}$', i, j)
-        local tex_cmd = string.format('\\node at (%s) {%s};', node_name, node_label)
-        tex.print(tex_cmd)
-      end
-    end
-  \end{luacode}
+	\tensorstyle{{len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85 }}
+	\mpa{{3,2,1}}{{N=1,E=1,W=1, y=0.65, tensor_name='A'}}
+	
+	\tlabel{'A'}{{ label='$A$' }}
+	
 \end{tikzpicture}
 
 \end{document}
