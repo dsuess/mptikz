@@ -34,7 +34,7 @@ Also, the exaple below shows how to customize the look of the tensors using the 
 It accepts any valid TikZ style including (as shown below) the name of predefined styles.
 
 ```latex
-\tikzstyle{tensornode}=[draw,minimum size=1, fill=green, rounded corners=0.1cm]
+\tikzstyle{tensornode}=[draw,minimum size=1, fill=orange, rounded corners=0.1cm]
 \tensor{{N=1, tensor_name='A', tensor_style='tensornode', len_vertical_legs=1}}
 \node at (A) {$A$};
 \node [anchor=west] at (A_N1) {$i$};
