@@ -35,7 +35,7 @@ It accepts any valid TikZ style including (as shown below) the name of predefine
 
 ```latex
 \tikzstyle{tensornode}=[draw,minimum size=1, fill=orange, rounded corners=0.1cm]
-\tensor{{N=1, tensor_name='A', tensor_style='tensornode', len_vertical_legs=1}}
+\tensor{{N=1, tensor_name='A', tensor_style='tensornode', len_vertical_legs=1, leg_style='line width= .2mm', leg_color_NS='black'}}
 \node at (A) {$A$};
 \node [anchor=west] at (A_N1) {$i$};
 ```
