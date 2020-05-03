@@ -54,7 +54,7 @@ We also show how to manipulate the default values for styling using the `\tensor
 See [example_3.tex](example_3.tex) for the full code
 
 ```latex
-\tensorstyle{{len_vertical_legs=0.25, tensor_style='draw, fill=orange, rounded corners=0.1cm'}}
+\tensorstyle{{len_vertical_legs=0.25, tensor_style='draw, fill=orange, rounded corners=0.1cm', leg_style='line width= .2mm', leg_color_NS='black', leg_color_EW='black'}}
 % Draw MPA manually
 \tensor{{S=1, W=1, E=1, x=0}}
 \tensor{{S=1, W=1, E=1, x=1.25}}
