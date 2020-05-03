@@ -56,14 +56,14 @@ See [example_3.tex](example_3.tex) for the full code
 ```latex
 \tensorstyle{{len_vertical_legs=0.25, tensor_style='draw, fill=orange, rounded corners=0.1cm'}}
 % Draw MPA manually
-\tensor{{S=1, W=0, E=1, x=0}}
-\tensor{{S=1, W=1, E=1, x=1.5}}
-\tensor{{S=1, W=1, E=0, x=3.0}}
+\tensor{{S=1, W=1, E=1, x=0}}
+\tensor{{S=1, W=1, E=1, x=1.25}}
+\tensor{{S=1, W=1, E=1, x=2.5}}
 
 % Draw MAP using appropriate function
 \tensorstyle{{tensor_style='draw, fill=green, rounded corners=0.1cm'}}
-\mpa{3}{{N=1, y=-1.5, tensor_name='A'}}
-\node at (A_2) {$A$};
+\mpa{3}{{N=1, E=1, W=1, y=-1.25, tensor_name='A'}}
+\node at (A_1_2) {$A$};
 ```
 
 <p align='center'>
