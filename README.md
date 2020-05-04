@@ -223,16 +223,82 @@ All these options are listed here:
 	* e.g. `trace_short='NS'` adds a red dot automatically all north and south lines.
 	* default value: `''`.
 
-visual help (example10):
+visual help ([example_10.tex](example_10.tex)):
 <p align='center'>
-	<img width='250' src='img/example_10.svg'>
+	<img width='300' src='img/example_10.svg'>
 </p>
 In this example the black lines correspond to the default and the grey lines correspond the modified version.
 
 
 ### Labelling
+The function `\tlabel` work "en par" with `\mpa`. In [example_9.tex](example_9.tex) we saw the two following examples"
+
+```latex
+\tlabel{'A1'}{{ label='$A$' }}
+\tlabel{'A2'}{{ label='$\\bar{A}$' }}
+```
+`A1` and `A2` refer to the tikz name for the arrays. In the second argument the option `label` takes the wanted label to be repeated to on each tensor. And `\` have to be escaped, therefore `\bar` is replaced by `\\bar`.
+
+The second argument can take other options than `label`. For instance `start_indices` which is an array with as many elements as there are blocks. Each element is either an integer or an array (see [example_11.tex](example_11.tex)) of the following structure `{string, integer}` (see [example_12.tex](example_12.tex)).
+
+Example 11:
+
+```latex
+\mpa[-1]{{3,2}}{{tensor_name='A'}}
+\tlabel{'A'}{{ label='$A$', start_indices={1,9}}}
+```
+<p align='center'>
+	<img width='450' src='img/example_11.svg'>
+</p>
+
+By putting intgerers as elements of `start_indices` we tell the code to start counting from that index within the block and it is incremented (it also accepts negative numbers).
+
+Example 12:
+
+```latex
+\mpa[-1]{{2,3,1}}{{tensor_name='A'}}
+\tlabel{'A'}{{ label='$A$', start_indices={1,{'j',-1},{'n',0}} }}
+```
+<p align='center'>
+	<img width='500' src='img/example_12.svg'>
+</p>
+
+This allows for the fast naming of complicated structures. There are other options that allow for the styling of how these indices are added and more technical things:
+
+* `index_placer` for how to place the index after label (`^`, `_` or ` `).
+	* default value: `^`.
+* `index_delimiter` takes a 2 character string to decide for which delimiters to use for the indices
+	* e.g. `[]`, `{}`, `()`, `||`, `  ` (2 spaces for no delimiter), ...
+	* default value: `()`.
+* `label` (as seen above) string that is put as is in every tensor.  (`\` needs to be escaped)
+	* deault value: `''`.
+* `labels` an array of strings where each element is copied as is (after `label`) within the corresponding block (`\` needs to be escaped).
+	* deault value: `{}`
+* `blocks_lenghts` the code remembers from the last `\mpa` used the corresponding lengths of each block. Though if `\mpa` is used again with different block lengths than in the first case `blocks_lenghts` needs to be set to the correct lengths or the code risks failing.
+
+These options can be seen at work in [example_13.tex](example_13.tex):
+
+```latex
+\mpa[-1]{{2,3,1}}{{tensor_name='A'}}
+\tlabel{'A'}{{ label='$A$', start_indices={1,{'j',-1},{'n',0}}, index_placer='_', index_delimiter='  ', labels={'$a$','$b$','$c$'}, blocks_lenghts={2,3,1} }}
+```
+<p align='center'>
+	<img width='500' src='img/example_13.svg'>
+</p>
+
 
 ## Tensor Style Parameters
+The function `\tensorstyle` statically sets the options that are specified as input. Here are the possible inputs it can take that were not mentioned before:
+
+* `len_vertical_legs` and `len_horizontal_legs`, default: `0.25`,
+* `tensor_height` and `tensor_width`, default: `0.75`,
+* `tensor_name`, default: `'T'`,
+* `tensor_style`, default: `'draw, fill=default_fill, rounded corners=0.1cm'`,
+* `leg_style`, default: `'line width = 1mm'`,
+* `leg_color_EW` and `leg_color_NS`, defaults: `'leg_color_EW'` and `'leg_color_NS'`,
+* `show_name`, default: `false`,
+* `name_style`, default: `''`,
+* `N`, `E`, `S` and `W`: the number of legs on each side, default: `0`,
 
 
 ## Lua Interface
@@ -243,10 +309,10 @@ See [example_e.tex](example_e.tex) for the full code.
 ```Lua
 for i = 1, nr_rows do
   local name = string.format('T%i', i)
-  mptikz.draw_mpa(nr_cols, {y=-(i - 1) * 1.5, tensor_name=name})
+  mptikz.draw_mpa(nr_cols, {y=-(i - 1) * 1.2, tensor_name=name},-1)
 
   for j = 1, nr_cols do
-    local node_name = string.format('T%i_%i', i, j)
+    local node_name = string.format('T%i_1_%i', i, j)
     local node_label = string.format('$T_{%i,%i}$', i, j)
     local tex_cmd = string.format('\\node at (%s) {%s};', node_name, node_label)
     tex.print(tex_cmd)
@@ -255,19 +321,7 @@ end
 ```
 
 <p align='center'>
-	<img height='150' src='img/example_e.svg'>
+	<img height='200' src='img/example_14.svg'>
 </p>
 
 
-## More examples
-
-For more examples, see the [documentation of mpnum](https://github.com/dseuss/mpnum/tree/feat-docs/docs/fig).
-However, the interface of mptikz has since been updated.
-Many of the things there could have been down easier using the pure latex interface.
-
-
-## Why LuaTeX?
-
-Sure, mptikz could just as well be implemented in pure PGF/TikZ.
-But the syntax is slightly messy at best and learning Lua is time well spend for me anyway.
-Also, by using TikZ externalize feature, one can compile the document with pdftex, which is generally faster, and only compile the TikZ images using LuaTeX.

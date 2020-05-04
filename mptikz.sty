@@ -338,12 +338,12 @@ function mptikz.block_naming(t_name, specs)
   local blocks_lenghts = specs:get('blocks_lenghts') -- lengths of the blocks, the code remembers the last block_lengths from mpa
   local start_indices = specs:get('start_indices',{}) -- table! starting incices for indicisation of each block
   local index_placer = specs:get('index_placer', '^') -- ^ or _ to place the index up or down
-  local index_parentheses = specs:get('index_parentheses','()') -- parenthesis symbols to put around the index
+  local index_delimiter = specs:get('index_delimiter','()') -- parenthesis symbols to put around the index
   local label = specs:get('label','') -- single string same for every block
   local labels = specs:get('labels', {}) -- table! of strings, one for each block
 
-  local o_par = index_parentheses[1]
-  local c_par = index_parentheses[2]
+  local o_par = index_delimiter[1]
+  local c_par = index_delimiter[2]
 
   local n_blocks = #blocks_lenghts
   local blocks = range(n_blocks)
