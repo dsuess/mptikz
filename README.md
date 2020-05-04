@@ -280,7 +280,8 @@ These options can be seen at work in [example_13.tex](example_13.tex):
 
 ```latex
 \mpa[-1]{{2,3,1}}{{tensor_name='A'}}
-\tlabel{'A'}{{ label='$A$', start_indices={1,{'j',-1},{'n',0}}, index_placer='_', index_delimiter='  ', labels={'$a$','$b$','$c$'}, blocks_lenghts={2,3,1} }}
+\tlabel{'A'}{{ label='$A$', start_indices={1,{'j',-1},{'n',0}}, index_placer='_', index_delimiter='  ',
+labels={'$a$','$b$','$c$'}, blocks_lenghts={2,3,1} }}
 ```
 <p align='center'>
 	<img width='500' src='img/example_13.svg'>
