@@ -1,8 +1,11 @@
 mptikz - graphical tensor notation for LuaTeX
 =============================================
 
-The mptikz package provides convenience functions for drawing tensor networks in graphical notation.
+The mptikz package provides convenient functions for drawing tensor networks in graphical notation.
 Right now, it manly deals with the 1D tensor networks, i.e. matrix-product states and operators, but it's readily extensible.
+The package need LuaLatex or LuaTex to work, I would reccomend to make the diagrams in a `standalone` file and import with `\includegraphics` the pdf file. 
+
+The function `\includegraphics` also works in math environments and with `\usepackage[export]{adjustbox}` one can add the option `valign` in `\includegraphics` to set the vertical alignment.
 
 The original creator of this package is user `dsuess`, this is an extension of his work.
 
@@ -27,10 +30,10 @@ This draws a tensor with 1, 2, and 3 legs on the left (EAST), top (NORTH), and b
 </p>
 
 See [example_1.tex](example_1.tex) for the full source code.
-Note that all examples rely on `lualatex`, see the [Makefile](Makefile) for how to compile the pictures in this repo.
+Note that all examples rely on `lualatex`.
 
-`mptikz` automatically names tensors and the legs, which then can be used to add annoations to the graph (see [example_2.tex](example_2.tex) for the full source code).
-Also, the exaple below shows how to customize the look of the tensors using the `tensor_style` properties passed to the `\tensor` command.
+`mptikz` automatically names tensors and legs, which then can be used to add annoations to the graph (see [example_2.tex](example_2.tex) for the full source code).
+Also, the example below shows how to customize the look of the tensors using the `tensor_style` properties passed to the `\tensor` command.
 It accepts any valid TikZ style including (as shown below) the name of predefined styles.
 
 ```latex
@@ -44,7 +47,7 @@ It accepts any valid TikZ style including (as shown below) the name of predefine
 	<img height='150' src='img/example_2.svg'>
 </p>
 
-For each legs, two different TikZ coordinates are defined:
+For each legs, three different TikZ coordinates are defined:
 `A_N1` stands for the middle first northern leg of the tensor `A`, `A_N1e` stands for the end of that leg and `A_N1b` for the base of the leg.
 
 ## Drawing more complex MPAs
@@ -89,9 +92,9 @@ Therefore, if we want to address the northern leg of the 2nd tensor in the 1st b
 
 ### Traces and removing external legs
 
-To draw structures akin to those of Matrix Product States one often has to trace out elements in the diagram. The `\mpa` command allows to do so in two ways. First the `\mpa` command has an optional argument that can take the values `-1`, `0`, `1` and `2`.
+To draw structures akin to those of Matrix Product States one often has to trace out elements in the diagram by connecting opposite lines. The `\mpa` command can do so automatically in two different ways. The `\mpa` command has an optional argument that can take the values `-1`, `0`, `1` and `2`.
 
-* `0` is the default value and does nothing.
+* `0` is the default value and does nothing and yields results similar to [example_4.tex](example_4.tex).
 
 * `-1` removes the most external (East-West) legs, as shown in [example_5.tex](example_5.tex):
 
@@ -158,16 +161,16 @@ Example 8:
 
 This examples features two ways to link the lines that were looped by the option: 
 
-1. By using the `\draw` command of tikz with the tikz coordinates for the ends of the lines. The color names `leg_color_EW` and `leg_color_NS` are loaded with the package to the default values for horizontal and vertical legs respectively.
-2. By the `trace_extensionEW` option. This styling option only works with the `2` optional argument of `\mpa`. It extends the legth of the line by the given argument, therefore changing the position of the tikz coordinate corresponding to the end of the line. It accepts negative inputs to reduce the length of the line.
+1. By using the `\draw` command of tikz with the tikz coordinates for the ends of the lines. The color names `leg_color_EW` and `leg_color_NS` are loaded with the package to the default color values for horizontal and vertical legs respectively.
+2. By the `trace_extensionEW` option. This styling option only works with the `2` optional argument of `\mpa`. It extends the legth of the line by the given argument, therefore changing the position of the tikz coordinate corresponding to the end of the line. It also accepts negative inputs to reduce the length of the line.
 
 The `tikz` coordinate `A1_1_1_W1` is halfway on the "external"/"end" line, with this option there is the new coordinate `A1_1_1_W1m` which is half way on "turn".
 
-The vertical displacement of the looped line changed between the two examples. This is thanks to the `trace_offsetEW` option which allows to control for the displacement of the line looping back.
+The vertical displacement of the looped line changed between [example_7.tex](example_7.tex) and [example_8.tex](example_8.tex). This is thanks to the `trace_offsetEW` option which allows to control for the displacement of the line looping back.
 
-The `trace_inverterE=-1` and `trace_inverterW=-1` allow us to change the side on which the line is looped around in example 8.
+The options `trace_inverterE=-1` and `trace_inverterW=-1` allow us to change the side on which the line is looped around in example 8.
 
-The same effect can be obtained for the vertical legs of the chain with the style option `trace_NS`. It takes as argument an array of and array of integers. Each sub-array corresponds to the block of the same index and contains the indices of the tensors within the block that we want to loop around. As is shown in [example_9.tex](example_9.tex):
+The same effect can be obtained for the vertical legs of the chain with the style option `trace_NS`. It takes as argument an array of an array of integers. Each sub-array corresponds to the block of the same index and contains the indices of the tensors within the block that we want to loop around. As is shown in [example_9.tex](example_9.tex):
 
 ```latex
 \tensorstyle{{trace_offsetNS=-0.2, len_horizontal_legs=0.22, len_vertical_legs = 0.3, x=1.4, tensor_width=0.85, tensor_height=0.85 }}
@@ -185,12 +188,12 @@ The same effect can be obtained for the vertical legs of the chain with the styl
 
 Here we used `traceNS = {{1,2},{},{1}}` for the first line, so for the first block the 1st and 2nd tensor had the vertical leg looped around, for the second block no leg is looped around since the corresponding array is empty and for the last block we have the array `{1}` therefore only the first tensor has the vertical leg looped around. Whereas for the second line we used `traceNS = {{1},{},{1}}` therefore for the first block only the first tensor has the looped around leg.
 
-With the option `legs_order` which takes as input a string of the form `'NSWE'` or `'EWNS'` one can decide in which order the legs of the tensor are drawn so to decide which is on top of the other at the intersections.
+With the option `legs_order`, which takes as input a string of the form `'NSWE'` or `'EWNS'`, one can decide in which order the legs of the tensor are drawn so to decide which is on top of the other at the intersections.
 
 The options `trace_inverterN`, `trace_inverterS`, `trace_offsetNS` and `trace_extensionNS` also exists and have the analogous effect of their horizontal counterparts.
 
 
-There are many more options that come into play for `\mpa[2]`, one can use them both in the input of `\mpa` or in with the `\tensorstyle command`.
+There are many more options that come into play for `\mpa[2]` and `traceNS`, one can use them both in the second input of `\mpa` or in `\tensorstyle`.
 All these options are listed here:
 
 * `trace_extensionNS` and `trace_extensionEW` correspond to how much the "long trace" is extended (can take negative values).
@@ -212,15 +215,15 @@ All these options are listed here:
 	*  default value: `1.0`.
 
 * `legs_order` chooses the order in which the legs are drawn.
-	* `legs_order='EWNS'` will first draw east legs, then west legs, then north legs and finally south legs. Caution: `legs_order='EWN'` will make the code fail and `legs_order='EWNN'` will not draw the south legs.
+	* `legs_order='EWNS'` will first draw forst the east legs, then the west legs, then the north legs and finally the south legs. Therefore the south legs will be on top and the east legs will be at the bottom. Caution: `legs_order='EWN'` will make the code fail and `legs_order='EWNN'` will not draw the south legs.
 	* deafult value: `'NSEW'`.
 
 * `trace_long` chooses which legs are looped around in all of the array. 
-	* e.g. `trace_long='NE'` loops around automatically all north and east lines.
+	* e.g. `trace_long='NE'` loops around automatically all north and east legs.
 	* default value: `''`.
 
-* `trace_short` chooses which legs will have a red dot in all of the array. 
-	* e.g. `trace_short='NS'` adds a red dot automatically all north and south lines.
+* `trace_short` chooses which legs will have a red dot in all of the array. (The optional inputs `2`  and `traceNS` will override `trace_short` for the legs on which they act)
+	* e.g. `trace_short='NS'` adds a red dot automatically all north and south legs except those that are looped around by `traceNS`.
 	* default value: `''`.
 
 visual help ([example_10.tex](example_10.tex)):
@@ -231,15 +234,15 @@ In this example the black lines correspond to the default and the grey lines cor
 
 
 ### Labelling
-The function `\tlabel` work "en par" with `\mpa`. In [example_9.tex](example_9.tex) we saw the two following examples"
+The function `\tlabel` work "en par" with `\mpa`. In [example_9.tex](example_9.tex) we saw the two following examples:
 
 ```latex
 \tlabel{'A1'}{{ label='$A$' }}
 \tlabel{'A2'}{{ label='$\\bar{A}$' }}
 ```
-`A1` and `A2` refer to the tikz name for the arrays. In the second argument the option `label` takes the wanted label to be repeated to on each tensor. And `\` have to be escaped, therefore `\bar` is replaced by `\\bar`.
+`A1` and `A2` refer to the tikz name for the first and second array. In the second argument the option `label` takes the wanted label to be repeated to on each tensor. And any `\` has to be escaped (because the string is parsed in `lua`), therefore `\bar` is replaced by `\\bar`.
 
-The second argument can take other options than `label`. For instance `start_indices` which is an array with as many elements as there are blocks. Each element is either an integer or an array (see [example_11.tex](example_11.tex)) of the following structure `{string, integer}` (see [example_12.tex](example_12.tex)).
+The second argument can take other options than `label`. For instance `start_indices` which is an array with as many elements as there are blocks. Each element of the array is either an integer (see [example_11.tex](example_11.tex)) or an array of the following structure `{string, integer}` (see [example_12.tex](example_12.tex)).
 
 Example 11:
 
@@ -263,20 +266,20 @@ Example 12:
 	<img width='500' src='img/example_12.svg'>
 </p>
 
-This allows for the fast naming of complicated structures. There are other options that allow for the styling of how these indices are added and more technical things:
+This allows for the fast naming of complicated structures. If the input to a given block is `{str, i}` then the index that is given to the j-th tensor of the block is `$str+i+j-1$`. There are other options that allow for the styling of how these indices are added and more technical things:
 
-* `index_placer` for how to place the index after label (`^`, `_` or ` `).
-	* default value: `^`.
-* `index_delimiter` takes a 2 character string to decide for which delimiters to use for the indices
-	* e.g. `[]`, `{}`, `()`, `||`, `  ` (2 spaces for no delimiter), ...
+* `index_placer` for how to place the index after the label (`'^'`, `'_'` or `' '`).
+	* default value: `'^'`.
+* `index_delimiter` takes a 2 character string that defines the delimiters to use before and after the indices.
+	* e.g. `[]`, `()`, `||`, `  ` (2 spaces for no delimiter), ...
 	* default value: `()`.
-* `label` (as seen above) string that is put as is in every tensor.  (`\` needs to be escaped)
+* `label` (as seen above) is a string that is put as is in every tensor.  (`\` needs to be escaped)
 	* deault value: `''`.
-* `labels` an array of strings where each element is copied as is (after `label`) within the corresponding block (`\` needs to be escaped).
-	* deault value: `{}`
+* `labels` is an array of strings where each element is copied as is (after `label`) within the corresponding block (`\` needs to be escaped).
+	* deault value: `''`
 * `blocks_lenghts` the code remembers from the last `\mpa` used the corresponding lengths of each block. Though if `\mpa` is used again with different block lengths than in the first case `blocks_lenghts` needs to be set to the correct lengths or the code risks failing.
 
-These options can be seen at work in [example_13.tex](example_13.tex):
+These options can all be seen at work in [example_13.tex](example_13.tex):
 
 ```latex
 \mpa[-1]{{2,3,1}}{{tensor_name='A'}}
@@ -289,7 +292,7 @@ labels={'$a$','$b$','$c$'}, blocks_lenghts={2,3,1} }}
 
 
 ## Tensor Style Parameters
-The function `\tensorstyle` statically sets the options that are specified as input. Here are the possible inputs it can take that were not mentioned before:
+The function `\tensorstyle` changes the default values to the options that are specified as input. Here are the possible inputs it can take that were not mentioned before:
 
 * `len_vertical_legs` and `len_horizontal_legs`, default: `0.25`,
 * `tensor_height` and `tensor_width`, default: `0.75`,
@@ -305,7 +308,7 @@ The function `\tensorstyle` statically sets the options that are specified as in
 ## Lua Interface
 
 Beside the TeX interface, we also provide a Lua interface to the drawing functions.
-See [example_e.tex](example_e.tex) for the full code.
+See [example_14.tex](example_14.tex) for the full code.
 
 ```Lua
 for i = 1, nr_rows do
