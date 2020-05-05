@@ -1,0 +1,26 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+\usepackage{mptikz}
+\begin{document}
+
+\begin{tikzpicture}
+  \begin{luacode}
+    local nr_rows = 6
+    local nr_cols = 8
+    mptikz.set_style({N=1,E=1,W=1,S=1, len_vertical_legs=0.25, len_horizontal_legs=0.25, tensor_style='draw, fill=orange, rounded corners=0.1cm', leg_style='line width=.4mm', leg_color_NS='black', leg_color_EW='black'})
+
+    for i = 1, nr_rows do
+      local name = string.format('T%i', i)
+      mptikz.draw_mpa(nr_cols, {y=-(i - 1) * 1.2, tensor_name=name},-1)
+
+      for j = 1, nr_cols do
+        local node_name = string.format('T%i_1_%i', i, j)
+        local node_label = string.format('$T_{%i,%i}$', i, j)
+        local tex_cmd = string.format('\\node at (%s) {%s};', node_name, node_label)
+        tex.print(tex_cmd)
+      end
+    end
+  \end{luacode}
+\end{tikzpicture}
+
+\end{document}

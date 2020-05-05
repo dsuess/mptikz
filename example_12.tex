@@ -1,0 +1,14 @@
+\RequirePackage{luatex85}
+\documentclass[tikz]{standalone}
+\usepackage{mptikz}
+\begin{document}
+
+\begin{tikzpicture}
+	\tensorstyle{{N=1, E=1, W=1, len_horizontal_legs=0.22, len_vertical_legs = 0.3, tensor_width=1, tensor_height=1 }}
+	
+	\mpa[-1]{{2,3,1}}{{tensor_name='A'}}
+	\tlabel{'A'}{{ label='$A$', start_indices={1,{'j',-1},{'n',0}} }}
+	
+\end{tikzpicture}
+
+\end{document}
