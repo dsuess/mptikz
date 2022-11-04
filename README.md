@@ -3,11 +3,9 @@ mptikz - graphical tensor notation for LuaTeX
 
 The mptikz package provides convenient functions for drawing tensor networks in graphical notation.
 Right now, it manly deals with the 1D tensor networks, i.e. matrix-product states and operators, but it's readily extensible.
-The package need LuaLatex or LuaTex to work, I would reccomend to make the diagrams in a `standalone` file and import with `\includegraphics` the pdf file. 
+The package needs LuaLatex or LuaTex to work, I would reccomend to make the diagrams in a `standalone` file and import the pdf file with `\includegraphics`.
 
-The function `\includegraphics` also works in math environments and with `\usepackage[export]{adjustbox}` one can add the option `valign` in `\includegraphics` to set the vertical alignment.
-
-The original creator of this package is user `dsuess`, this is an extension of his work.
+Tip: `\includegraphics` also works in math environments. The `valign` option to `\includegraphics` allows the user to set the vertical alignmnet. To enable it, you need to import `\usepackage[export]{adjustbox}`.
 
 
 ## Installation
